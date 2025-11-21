@@ -77,3 +77,49 @@ header h2 {
      color: #ecf0f1;
      font-size: 28px;
 }
+header .nav{
+    display: flex;
+     gap:20px;
+     align-items:center;
+     position: relative;
+}
+header .nav i{
+        width: 35px;
+    height: 35px;
+    background: rgb(231, 231, 231);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.profile{
+    position: absolute;
+    display: none;
+    width: 200px;
+    top: 45px;
+    z-index: 2;
+    right: 0px;
+     background: #fff;
+     color: black;
+     border-radius: 10px;
+     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.profile nav ul{
+    margin: 10px;
+}
+.profile nav ul li {
+    list-style: none;
+    margin-top: 13px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.profile ul li:hover{
+    background: rgb(243, 243, 243);
+}
+.profile nav ul li a {
+    text-decoration: none;
+    color: black;
+}

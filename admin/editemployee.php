@@ -27,9 +27,7 @@ if (isset($_POST['update'])) {
     $address = $_POST['address'];
     $status = $_POST['status'];
 
-    $sql = "UPDATE employees SET 
-                name='$name',
-                email='$email',
+    $sql = "UPDATE employees SET name='$name',email='$email',
                 salary='$salary',
                 phone='$phone',
                 position='$position',

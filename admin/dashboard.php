@@ -30,9 +30,24 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 1){
     <div>
         <input type="text" placeholder="Search Employee">
     </div>
-    <div>
-        <h2>Welcome <?= $_SESSION['name'] . "!" ?></h2>
+    <div class="nav">
+        <h2>Welcome <?= $_SESSION['name'] . " " ."!" ?></h2>
+        <i class="fas fa-bell"></i>
+        <i class="fas fa-cog"></i>
+        <i onclick="menu(event)" class="fas fa-bars"></i>
+
+        <div class="profile">
+        <nav>
+            <ul>
+                <li><a href="">View Profile</a></li>
+                  <li><a href="">Get Help</a></li>
+                    <li><a href="">Logout</a></li>
+            </ul>
+        </nav>
+
     </div>
+    </div>
+    
     
 </header>
 
@@ -43,6 +58,18 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 1){
     
     <p>Welcome To payroll Management platform</p>
 </div> -->
+<script>
+function menu(event) {
+    const profile = document.querySelector('.profile');
+
+    if (profile.style.display === "block") {
+        profile.style.display = "none";
+    } else {
+        profile.style.display = "block";
+    }
+}
+</script>
+
 
 </body>
 </html>
