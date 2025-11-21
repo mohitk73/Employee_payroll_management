@@ -12,8 +12,8 @@ body {
 }
 
 .sidebar {
-    width: 250px;
-    background: #2c3e50;
+    width: 265px;
+    background: #1a2633;
     color: #fff;
     display: flex;
     flex-direction: column;
@@ -38,7 +38,7 @@ body {
 }
 
 .sidebar a:hover {
-    background: #34495e;
+    background: #085baf;
 }
 
 .sidebar a.logout {
@@ -49,14 +49,31 @@ body {
 .sidebar a.logout:hover {
     background: #c0392b;
 }
-
-
-/* .main-content {
+main {
     flex: 1;
-    padding: 40px;
+    display: flex;
+    flex-direction: column;
 }
-
-.main-content h2 {
-    margin-bottom: 20px;
+header {
+    background-color: #fff;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+header input{
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 300px;
+}
+header h2 {
+    font-size: 18px;
     color: #2c3e50;
-} */
+}
+.sidebar h1 i {
+    margin-right: 10px;
+     color: #ecf0f1;
+     font-size: 28px;
+}
