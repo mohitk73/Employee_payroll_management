@@ -1,0 +1,45 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: 'Arial', sans-serif;
+}
+section{
+    display: grid;
+    max-width: 400px;
+    margin: 200px auto;
+}
+form{
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+form h2{
+    text-align: center;
+    margin-bottom: 20px;
+}
+form input{
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-top: 5px;
+    width: 100%;
+}
+button{
+    padding: 8px 16px;
+    background-color: green;
+    color: white;
+    border-radius: 10px;
+    float: right;
+    border: none;
+    cursor: pointer;
+}
+
+
+
+
+
+
