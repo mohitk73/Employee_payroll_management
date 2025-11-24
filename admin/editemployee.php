@@ -9,6 +9,7 @@ if (!isset($_GET['id'])) {
     header("Location:employees.php");
     exit();
 }
+
 $id = $_GET['id'];
 $emp = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM employees WHERE id=$id"));
 
@@ -40,17 +41,105 @@ if (isset($_POST['update'])) {
     header("Location:employees.php");
     exit();
 }
+include('../includes/header.php');
 ?>
-<!DOCTYPE html>
-<html>
+
 <head>
     <title>Edit Employee</title>
+    <style>
+        section{
+    margin-left: 250px; 
+    padding: 30px;
+    font-family: Arial, sans-serif;
+    display: grid;
+    max-width: 800px;
+    margin: 10px auto;
+    
+}
+
+h3{
+    font-size: 22px;
+    margin-bottom: 5px;
+    color: #2c3e50;
+}
+hr{
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+}
+
+form {
+    background: #ffffff;
+    padding: 25px;
+    max-width: 800px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+form input,
+form textarea,
+form select {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-top: 5px;
+}
+
+form textarea {
+    height: 40px;
+    resize: none;
+}
+
+form button {
+    background: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    float: right;
+}
+
+form button:hover {
+    background: #0056b3;
+}
+
+.back  {
+    background-color: #444;
+     
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    float: right;
+    font-size: 15px;
+    text-decoration: none;
+    margin-right: 5px;
+}
+
+.back :hover {
+    color: #000;
+    
+}
+
+form label {
+    font-weight: bold;
+    display: block;
+    margin-top: 12px;
+}
+
+    </style>
 </head>
-<body>
-
-<h2>Edit Employee</h2>
-
+<section>
 <form method="POST">
+
+<h3>Edit Employee</h3>
+<hr>
 
     Name:<br>
     <input type="text" name="name" value="<?= $emp['name'] ?>" required><br><br>
@@ -79,11 +168,11 @@ if (isset($_POST['update'])) {
         <option value="0" <?= $emp['status'] == 0 ? 'selected' : '' ?>>Inactive</option>
     </select><br><br>
 
+    
     <button type="submit" name="update">Update Employee</button>
+    <a class="back" href="employees.php">⬅ Back to Employee List</a>
 </form>
 
-<br>
-<a href="employees.php">⬅ Back to Employee List</a>
 
-</body>
-</html>
+</section>
+

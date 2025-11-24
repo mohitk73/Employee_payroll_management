@@ -1,9 +1,11 @@
 <?php
-session_start();
+/* session_start();
 if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 1){
     header("Location: login.php");
     exit;
-}
+} */
+include('../includes/header.php');
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -13,63 +15,94 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 1){
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<div class="sidebar">
-    <h1><i class="fas fa-file-invoice-dollar"></i>Mind2Web Payroll</h1>
-     <a href="employees.php">Dashboard</a>
-    <a href="employees.php">Employees</a>
-    <a href="attendance.php">Leave and Attendance</a>
-    <a href="payroll.php">Payroll</a>
-     <a href="employees.php">Reports</a>
-      <a href="employees.php">Settings</a>
-       <a href="employees.php">Contact Support</a>
-    <a href="../logout.php" class="logout">Logout</a>
-</div>
+    <main><?php
+$totalEmployees = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM employees"))['total'];
+$netPay = mysqli_fetch_assoc(mysqli_query($conn,
+    "SELECT SUM(net_pay) AS total FROM payroll WHERE MONTH(pay_date) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH)"
+))['total'];
+
+$pendingLeave = mysqli_fetch_assoc(mysqli_query($conn,
+    "SELECT COUNT(*) AS total FROM attendance WHERE status='pending'"
+))['total'];
+
+$nextPayday = date("d M Y", strtotime("last day of this month"));
+
+$recent = mysqli_query($conn, "SELECT * FROM employees ORDER BY id DESC LIMIT 5");
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../assets/css/admindashboard.css">
+</head>
+
+<body>
+
+<?php include "sidebar.php"; ?>
+<?php include "header.php"; ?>
+
 <main>
-<header>
-   
-    <div>
-        <input type="text" placeholder="Search Employee">
-    </div>
-    <div class="nav">
-        <h2>Welcome <?= $_SESSION['name'] . " " ."!" ?></h2>
-        <i class="fas fa-bell"></i>
-        <i class="fas fa-cog"></i>
-        <i onclick="menu(event)" class="fas fa-bars"></i>
 
-        <div class="profile">
-        <nav>
-            <ul>
-                <li><a href="">View Profile</a></li>
-                  <li><a href="">Get Help</a></li>
-                    <li><a href="">Logout</a></li>
-            </ul>
-        </nav>
+<h1>Dashboard Overview</h1>
 
+<!-- KEY METRICS -->
+<div class="metrics">
+
+    <div class="card">
+        <h3>Total Employees</h3>
+        <p><?= $totalEmployees ?></p>
     </div>
+
+    <div class="card">
+        <h3>Total Net Pay (Last Month)</h3>
+        <p>₹ <?= $netPay ? $netPay : 0 ?></p>
     </div>
-    
-    
-</header>
+
+    <div class="card">
+        <h3>Pending Leave Requests</h3>
+        <p><?= $pendingLeave ?></p>
+    </div>
+
+    <div class="card">
+        <h3>Next Pay Date</h3>
+        <p><?= $nextPayday ?></p>
+    </div>
+
+</div>
+
+<!-- RECENT EMPLOYEES -->
+<h2>Recently Added Employees</h2>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Position</th>
+        <th>Joined</th>
+    </tr>
+
+    <?php while($row = mysqli_fetch_assoc($recent)) { ?>
+        <tr>
+            <td><?= $row['name'] ?></td>
+            <td><?= $row['email'] ?></td>
+            <td><?= $row['position'] ?></td>
+            <td><?= $row['created_at'] ?></td>
+        </tr>
+    <?php } ?>
+</table>
+
+<!-- QUICK ACTION -->
+<h2>Quick Actions</h2>
+<div class="actions">
+    <a class="btn" href="add_employee.php">+ Add New Employee</a>
+    <a class="btn" href="payroll.php">Run Payroll</a>
+    <a class="btn" href="attendance.php">Manage Attendance</a>
+    <a class="btn" href="reports.php">Generate Reports</a>
+</div>
 
 </main>
 
-
-<!-- <div class="main-content">
-    
-    <p>Welcome To payroll Management platform</p>
-</div> -->
-<script>
-function menu(event) {
-    const profile = document.querySelector('.profile');
-
-    if (profile.style.display === "block") {
-        profile.style.display = "none";
-    } else {
-        profile.style.display = "block";
-    }
-}
-</script>
-
-
+</body>
+</html>
+</main>
 </body>
 </html>

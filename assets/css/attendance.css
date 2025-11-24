@@ -1,0 +1,62 @@
+section {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    
+}
+h3{
+     color: #2c3e50;
+     font-size: 20px;
+}
+
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.attendance-table th, 
+.attendance-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+.attendance-table th {
+    background: #1a2633;
+    color: white;
+}
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #fff;
+}
+
+.badge.green { background: green; }
+.badge.red { background: #e74c3c; }
+.badge.gray { background:grey; }
+
+.btn {
+    padding: 6px 12px;
+    text-decoration: none;
+    border-radius: 5px;
+    color: white;
+    margin: 2px;
+    font-size: 14px;
+    background-color: grey;
+}
+
+.btn.green { background: green; }
+.btn.red { background: #e74c3c; }
+.btn:hover { opacity: 0.8; }
+
+.attendance-filter {
+    margin: 15px 0;
+}
+
+.attendance-filter .btn {
+    margin-right: 10px;
+}

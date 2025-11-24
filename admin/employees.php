@@ -1,5 +1,5 @@
 <?php
-session_start();
+include('../includes/header.php');
 include "../config/db.php";
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] != 1) {
@@ -17,18 +17,16 @@ if (isset($_GET['id'])){
     exit();
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+      <link rel="stylesheet" type="text/css" href="../assets/css/employees.css">
 </head>
-<body>
+<main>
+<section>
     <h2>Manage Employees</h2>
 
 <a href="addemployee.php">+ Add New Employee</a>
-<a href="dashboard.php">Back to Dashboard</a>
+<a class="backdashboard" href="dashboard.php"> < Back to Dashboard</a>
+<a href="addsalary.php">+ Add Salary Structure</a>
 <br><br>
 
 <table border="1" cellpadding="8" cellspacing="0">
@@ -65,19 +63,22 @@ if (isset($_GET['id'])){
             <td><?= $row['address'] ?></td>
 
             <td>
-                <?= $row['status'] == 1 ? "Active" : "Inactive" ?>
-            </td>
+    <span class="status-badge <?= $row['status'] == 1 ? 'active' : 'inactive' ?>">
+        <?= $row['status'] == 1 ? "Active" : "Inactive" ?>
+    </span>
+</td>
+
 
             <td>
-                <a href="editemployee.php?id=<?= $row['id'] ?>">Edit</a> |
-                <a href="employees.php?id=<?= $row['id'] ?>" 
+                <a href="editemployee.php?id=<?= $row['id'] ?>">Edit</a>
+                <a class="delete"  href="employees.php?id=<?= $row['id'] ?>" 
                    onclick="return confirm('Are you sure?')">Delete</a>
             </td>
         </tr>
     <?php } ?>
 
 </table>
-    
-</body>
-</html>
+</section>
+</main>
+
 
