@@ -1,12 +1,12 @@
 <?php
-session_start();
-if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 0){
-    header("Location: ../admin/login.php");
-    exit;
-}
+include "../config/auth.php";
+requireRole([0]);  
+
+include('../includes/header.php');
 ?>
-<h1>Employee Dashboard</h1>
+<main><h1>Employee Dashboard</h1>
 
 <a href="profile.php">View Profile</a><br>
 <a href="salary.php">View Salary</a><br>
-<a href="../admin/logout.php">Logout</a>
+<a href="../admin/logout.php">Logout</a></main>
+

@@ -1,9 +1,5 @@
 <?php
 session_start();
-if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 1){
-    header("Location: login.php");
-    exit;
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -15,7 +11,8 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 1){
 <body>
 <div class="sidebar">
     <h1><i class="fas fa-file-invoice-dollar"></i>Mind2Web Payroll</h1>
-     <a href="employees.php">Dashboard</a>
+     <?php if($_SESSION['role'] == 1) { ?>
+    <a href="employees.php">Dashboard</a>
     <a href="employees.php">Employees</a>
     <a href="attendance.php">Leave and Attendance</a>
     <a href="salary_structure.php">Salary Structure</a>
@@ -25,6 +22,37 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 1){
       <a href="employees.php">Settings</a>
        <a href="employees.php">Contact Support</a>
     <a href="../logout.php" class="logout">Logout</a>
+    <?php } ?>
+
+     <?php if($_SESSION['role'] == 2) { ?>
+    <a href="employees.php">Dashboard</a>
+    <a href="employees.php">Employees</a>
+    <a href="attendance.php">Leave and Attendance</a>
+    <a href="salary_structure.php">Salary Structure</a>
+    <a href="payroll.php">Payroll</a>
+     <a href="employees.php">Payslips</a>
+      <a href="employees.php">Settings</a>
+       <a href="employees.php">Contact Support</a>
+    <a href="../logout.php" class="logout">Logout</a>
+    <?php } ?>
+
+    <?php if($_SESSION['role'] == 3) { ?>
+    <a href="employees.php">Dashboard</a>
+    <a href="../admin/employees.php">Employees List</a>
+    <a href="../admin/attendance.php">Attendance</a>
+     <a href="employees.php">Payslips</a>
+      <a href="employees.php">Settings</a>
+       <a href="employees.php">Contact Support</a>
+    <a href="../logout.php" class="logout">Logout</a>
+    <?php } ?>
+
+    <?php if($_SESSION['role'] == 0) { ?>
+    <a href="../employee/dashboard.php">Dashboard</a>
+    <a href="../employee/attendance.php">Attendance</a>
+     <a href="employees.php">Payslips</a>
+       <a href="employees.php">Contact Support</a>
+    <a href="../logout.php" class="logout">Logout</a>
+    <?php } ?>
 </div>
 <main>
 <header>

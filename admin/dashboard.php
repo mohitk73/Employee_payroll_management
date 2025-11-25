@@ -4,6 +4,8 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 1){
     header("Location: login.php");
     exit;
 } */
+include '../config/auth.php';
+requireRole([1]);  
 include('../includes/header.php');
 
 ?>

@@ -2,8 +2,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-session_start();
 include "../config/db.php";
+include "../config/auth.php";
 
 if(isset($_POST['login'])){
     $email = $_POST['email'];
@@ -14,26 +14,38 @@ if(isset($_POST['login'])){
 
     if(mysqli_num_rows($result) == 1){
         $row = mysqli_fetch_assoc($result);
-
         if($row['password'] == $password){
-
             $_SESSION['user_id'] = $row['id'];
-            $_SESSION['name']=$row['name'];
+            $_SESSION['name'] = $row['name'];
             $_SESSION['role'] = $row['role'];
-
             if($row['role'] == 1){
-                header("Location: dashboard.php");
-            } else {
-                header("Location: ../employee/dashboard.php"); 
+                header("Location: ../admin/dashboard.php");
             }
+            elseif($row['role'] == 2){
+                 header("Location: ../hr/hrdashboard.php");
+            }
+            elseif($row['role'] == 3){
+                header("Location: ../manager/managerdashboard.php");
+            }
+            elseif($row['role'] == 0){
+                header("Location: ../employee/dashboard.php");
+            }
+            else{
+                $error = "Invalid Role Setup!";
+            }
+
+            exit();
+
         } else {
             $error = "Invalid Password";
         }
+
     } else {
         $error = "Email Not Found";
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

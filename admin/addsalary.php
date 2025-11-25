@@ -1,11 +1,7 @@
 <?php
-session_start();
 include "../config/db.php";
-
-if (!isset($_SESSION['role']) || $_SESSION['role'] != 1) {
-    header("Location: login.php");
-    exit();
-}
+include "../config/auth.php"; 
+requireRole([1,2,3]);  
 if(isset($_POST['submit'])){
 $employee_id=$_POST['employee_id'];
  $basic_salary = $_POST['basic_salary'];

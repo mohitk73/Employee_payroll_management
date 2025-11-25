@@ -1,0 +1,104 @@
+section {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+h3{
+     color: #2c3e50;
+     font-size: 24px;
+}
+.status{
+    margin-top: 30px;
+    color: #2c3e50;
+}
+.status h4{
+     color: #1f2d3d;
+     font-size: 18px;
+}
+.status span{
+    color: white;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+.present {
+    background-color:green;
+}
+
+.absent {
+    background-color: #dc3545;
+}
+.not-marked {
+    background-color: #6c757d;
+}
+.summary{
+    margin-top: 30px;
+   
+}
+.summary h4{
+      color: #2c3e50;
+      font-size: 20px;
+     
+}
+.summary .summary-details{
+     display: flex;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    gap: 20px;
+}
+.summary .card{
+    width: 350px;
+    height: auto;
+   background-color: #f7f7f7;
+   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 20px;
+}
+.card h3{
+    color: #7a7a7a;
+   font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+ .card h4{
+   font-size: 30px;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.attendance-history{
+    margin-top: 30px;
+}
+.attendance-history h4{
+     color: #2c3e50;
+     font-size: 20px;
+}
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.attendance-table th, 
+.attendance-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+.attendance-table th {
+    background: #1a2633;
+    color: white;
+}
+.attendance-table .present{
+    background-color: green;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 10px;
+}
+.attendance-table .absent{
+    background-color:#dc3545;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 10px;
+}

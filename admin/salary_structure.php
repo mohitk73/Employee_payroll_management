@@ -1,11 +1,11 @@
 <?php
 session_start();
-
+include "../config/db.php";
 if(!isset($_SESSION['role']) || $_SESSION['role'] != '1'){
     header("Location: login.php");
     exit();
 }
-include "../config/db.php";
+
 
 if(isset($_POST['update'])){
     $salary_id = $_POST['salary_id'];

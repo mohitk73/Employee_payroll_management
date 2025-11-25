@@ -1,10 +1,7 @@
 <?php
-session_start();
 include "../config/db.php";
-if (!isset($_SESSION['role']) || $_SESSION['role'] != 1) {
-    header("Location: login.php");
-    exit();
-}
+include "../config/auth.php"; 
+requireRole([1,2,3]);  
 if (!isset($_GET['id'])) {
     header("Location:employees.php");
     exit();
@@ -23,6 +20,7 @@ if (isset($_POST['update'])) {
     $email = $_POST['email'];
     $salary = $_POST['salary'];
     $phone = $_POST['phone'];
+    $role=$_POST['role'];
     $position = $_POST['position'];
     $department = $_POST['department'];
     $address = $_POST['address'];
@@ -31,6 +29,7 @@ if (isset($_POST['update'])) {
     $sql = "UPDATE employees SET name='$name',email='$email',
                 salary='$salary',
                 phone='$phone',
+                role='$role',
                 position='$position',
                 department='$department',
                 address='$address',
@@ -152,6 +151,14 @@ form label {
 
     Phone:<br>
     <input type="text" name="phone" value="<?= $emp['phone'] ?>" required><br><br>
+
+     Role:<br>
+    <select name="role">
+    <option value="0">Employee</option>
+    <option value="1">Admin</option>
+    <option value="2">Manager</option>
+    <option value="3">HR</option>
+</select><br><br>
 
     Position:<br>
     <input type="text" name="position" value="<?= $emp['position'] ?>" required><br><br>

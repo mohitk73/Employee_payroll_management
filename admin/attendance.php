@@ -1,11 +1,7 @@
 <?php
-session_start();
 include "../config/db.php";
-
-if (!isset($_SESSION['role']) || $_SESSION['role'] != 1) {
-    header("Location: login.php");
-    exit();
-}
+include "../config/auth.php"; 
+requireRole([1,2,3]);  
 $date = date("Y-m-d"); 
 if (isset($_GET['emp_id']) && isset($_GET['status'])) {
     $emp_id = $_GET['emp_id'];
@@ -61,7 +57,7 @@ include('../includes/header.php');
         <th>Name</th>
         <th>Position</th>
         <th>Status</th>
-        <th>Action</th>
+          <?php if($_SESSION['role'] ==1 || $_SESSION['role'] == 2) {?><th>Action</th><?php }?>
     </tr>
 
     <?php while ($row = mysqli_fetch_assoc($today)) { 
@@ -89,8 +85,9 @@ include('../includes/header.php');
                 <span class="badge red">Absent</span>
             <?php } ?>
         </td>
-
+ <?php if($_SESSION['role'] ==1 || $_SESSION['role'] == 2){?>
      <td>
+       
     <?php if ($row['status'] === NULL) { ?>
         <a href="attendance.php?emp_id=<?= $row['id'] ?>&status=1"
            class="btn green">
@@ -105,8 +102,11 @@ include('../includes/header.php');
     <?php } else { ?>
         <span class="badge gray">Already Marked</span>
     <?php } ?>
+    
 </td>
+ <?php } ?>
     </tr>
+   
     <?php } ?>
 
 </table>

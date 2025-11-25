@@ -1,10 +1,7 @@
 <?php
-session_start();
 include "../config/db.php";
-if (!isset($_SESSION['role']) || $_SESSION['role'] != 1) {
-    header("Location: login.php");
-    exit();
-}
+include "../config/auth.php"; 
+requireRole([1,2,3]);  
 
 if (isset($_POST['add'])) {
 
@@ -138,9 +135,11 @@ form button:hover {
 
     <label>Role</label><br>
     <select name="role">
-        <option value="0">Employee</option>
-        <option value="1">Admin</option>
-    </select><br><br>
+    <option value="0">Employee</option>
+    <option value="1">Admin</option>
+    <option value="2">Manager</option>
+    <option value="3">HR</option>
+</select><br><br>
 
     <label>Salary</label><br>
     <input type="number" name="salary" required><br><br>
