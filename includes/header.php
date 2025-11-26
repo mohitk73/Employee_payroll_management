@@ -1,6 +1,4 @@
-<?php
-session_start();
-?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,12 +23,12 @@ session_start();
     <?php } ?>
 
      <?php if($_SESSION['role'] == 2) { ?>
-    <a href="employees.php">Dashboard</a>
-    <a href="employees.php">Employees</a>
-    <a href="attendance.php">Leave and Attendance</a>
-    <a href="salary_structure.php">Salary Structure</a>
-    <a href="payroll.php">Payroll</a>
-     <a href="employees.php">Payslips</a>
+    <a href="../hr/hrdashboard.php">Dashboard</a>
+    <a href="../admin/employees.php">Employees</a>
+    <a href="../admin/attendance.php">Leave and Attendance</a>
+    <a href="../admin/salary_structure.php">Salary Structure</a>
+    <a href="../admin/payroll.php">Payroll</a>
+     <a href="../admin/payslip.php">Payslips</a>
       <a href="employees.php">Settings</a>
        <a href="employees.php">Contact Support</a>
     <a href="../logout.php" class="logout">Logout</a>
@@ -69,9 +67,9 @@ session_start();
         <div class="profile">
         <nav>
             <ul>
-                <li><a href="">View Profile</a></li>
+                <li><a href="../admin/profile.php">View Profile</a></li>
                   <li><a href="">Get Help</a></li>
-                    <li><a href="">Logout</a></li>
+                    <li><a href="../logout.php">Logout</a></li>
             </ul>
         </nav>
 

@@ -20,12 +20,15 @@ $employee_id=$_POST['employee_id'];
 }
 include('../includes/header.php');
 ?>
+<head>
+   <link rel="stylesheet" href="../assets/css/setsalary.css" >
+</head>
 <main>
     <section>
        <form method="post" action="">
 
        <h3>Set Salary Structure</h3><br>
-       <hr><br>
+       <hr>
     <label>Employee:</label>
     <select name="employee_id" required>
         <option value="">Select Employee</option>
@@ -49,9 +52,9 @@ include('../includes/header.php');
     <label>Fixed Deductions:</label>
     <input type="number" name="deductions" value="0">
     <br><br>
-    <a href="employees.php">Back to Employees</a>
-
-    <input type="submit" name="submit" value="Save Salary Structure">
+    <div class="salary"><a href="employees.php" class="back"><- Back to Employees</a>
+    <button type="submit" name="submit">Save Salary Structure</button>
+</div>
 </form>
     </section>
 </main>

@@ -1,8 +1,8 @@
 <?php
-include('../includes/header.php');
-include "../config/db.php";
 include "../config/auth.php"; 
-requireRole([1,2,3]);   
+requireRole([1,2,3]);
+include "../config/db.php";
+include '../includes/header.php'; 
 $sql = "SELECT * FROM employees ORDER BY id ";
 $result = mysqli_query($conn, $sql);
 
@@ -30,7 +30,7 @@ $roles = [
     <h2>Employees List</h2>
 <?php } ?>
 
-<?php if($_SESSION['role']==1 || ['role']==2) {?>
+<?php if($_SESSION['role']==1 || $_SESSION['role']==2) {?>
 <a href="addemployee.php">+ Add New Employee</a>
 <a href="addsalary.php">+ Add Salary Structure</a><?php }?>
 <a class="backdashboard" href="dashboard.php"> < Back to Dashboard</a>

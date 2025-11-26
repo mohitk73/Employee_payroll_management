@@ -36,7 +36,7 @@ main {
     padding: 40px;
     background: #f5f6fa;
     display: grid;
-    margin: -40px auto;
+    margin: 0 auto;
     max-width: 800px;
     
 }
@@ -98,7 +98,6 @@ form button:hover {
 }
 .back  {
     background-color: #444;
-     
     color: white;
     padding: 10px 20px;
     border: none;
@@ -137,8 +136,8 @@ form button:hover {
     <select name="role">
     <option value="0">Employee</option>
     <option value="1">Admin</option>
-    <option value="2">Manager</option>
-    <option value="3">HR</option>
+    <option value="2">HR</option>
+    <option value="3">Manager</option>
 </select><br><br>
 
     <label>Salary</label><br>

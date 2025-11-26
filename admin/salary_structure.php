@@ -5,8 +5,6 @@ if(!isset($_SESSION['role']) || $_SESSION['role'] != '1'){
     header("Location: login.php");
     exit();
 }
-
-
 if(isset($_POST['update'])){
     $salary_id = $_POST['salary_id'];
     $basic_salary =$_POST['basic_salary'];
@@ -27,9 +25,12 @@ $result = mysqli_query($conn, $sql);
 
 include('../includes/header.php');
 ?>
+<head>
+    <link rel="stylesheet" href="../assets/css/salarystructure.css" >
+</head>
 <main>
     <section>
-        <h2>View Salary Structures</h2>
+        <h3>Employees Salary Structure</h3>
 
 <?php if(isset($msg)) { echo '<p style="color:green;">'.$msg.'</p>'; } ?>
 

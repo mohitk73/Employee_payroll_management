@@ -1,0 +1,41 @@
+.
+├── admin
+│   ├── addemployee.php
+│   ├── addsalary.php
+│   ├── attendance.php
+│   ├── dashboard.php
+│   ├── editemployee.php
+│   ├── employees.php
+│   ├── login.php
+│   ├── payroll.php
+│   ├── payslip.php
+│   ├── profile.php
+│   └── salary_structure.php
+├── assets
+│   └── css
+│       ├── admindashboard.css
+│       ├── attendance.css
+│       ├── empattendance.css
+│       ├── employees.css
+│       ├── login.css
+│       ├── payroll.css
+│       ├── profile.css
+│       ├── salarystructure.css
+│       └── setsalary.css
+├── config
+│   ├── auth.php
+│   └── db.php
+├── employee
+│   ├── attendance.php
+│   └── dashboard.php
+├── hr
+│   └── hrdashboard.php
+├── includes
+│   └── header.php
+├── index.php
+├── logout.php
+├── manager
+│   └── managerdashboard.php
+└── migrations
+
+10 directories, 29 files

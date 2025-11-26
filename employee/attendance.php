@@ -41,6 +41,7 @@ if ($todayattendance) {
 $attendancehistory = "SELECT * FROM attendance WHERE employee_id='$user_id' ORDER BY date DESC";
 $history = mysqli_query($conn, $attendancehistory);
 
+
 ?>
 
 <head>

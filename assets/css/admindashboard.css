@@ -180,4 +180,5 @@ header .nav i{
 .profile nav ul li a {
     text-decoration: none;
     color: black;
+    display: block;
 } 

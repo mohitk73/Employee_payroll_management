@@ -52,7 +52,7 @@ include('../includes/header.php');
     font-family: Arial, sans-serif;
     display: grid;
     max-width: 800px;
-    margin: 10px auto;
+    margin: 20px auto;
     
 }
 
@@ -134,6 +134,7 @@ form label {
 
     </style>
 </head>
+<main>
 <section>
 <form method="POST">
 
@@ -156,8 +157,8 @@ form label {
     <select name="role">
     <option value="0">Employee</option>
     <option value="1">Admin</option>
-    <option value="2">Manager</option>
-    <option value="3">HR</option>
+    <option value="2">HR</option>
+    <option value="3">Manager</option>
 </select><br><br>
 
     Position:<br>
@@ -182,4 +183,5 @@ form label {
 
 
 </section>
+</main>
 

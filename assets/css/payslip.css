@@ -1,0 +1,167 @@
+section {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    display:grid;
+    margin: 50px auto;
+    max-width: 750px;
+}
+.company-name{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+hr{
+    border: 1px solid rgb(20, 121, 184);;
+    margin-top: 10px;
+}
+.month h3{
+    padding: 5px;
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 18px;
+}
+.employee-summary{
+    padding: 5px;
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+.employee-data{
+    display: flex;
+    gap: 30px;
+}
+.employee-data div p{
+    margin-top: 2px;
+}
+.salary-details{
+    margin-top: 10px;
+}
+.salary-details table{
+    border-collapse: collapse;
+    width: 105%;
+}
+.salary-details table th{
+    text-align:left;
+    padding: 5px;
+    color: rgb(20, 121, 184);
+}
+.salary-details table td{
+    padding: 5px;
+}
+.attendance-details{
+    margin-top: 10px;
+}
+.attendance-details table{
+    border-collapse: collapse;
+    width: 136%;
+}
+.attendance-details table th{
+    text-align:left;
+    padding: 5px;
+    color: rgb(20, 121, 184);
+}
+.attendance-details table td{
+    padding: 5px;
+}
+.deduction-details{
+    margin-top: 10px;
+}
+.deduction-details table{
+    border-collapse: collapse;
+    width: 100%;
+}
+.deduction-details table th{
+    text-align:left;
+    padding: 5px;
+    color: rgb(20, 121, 184);
+}
+.deduction-details table td{
+    padding: 5px;
+}
+.totalnetpay{
+    margin-top: 10px;
+    text-align: center;
+}
+.totalnetpay h3{
+    font-weight: 500;
+    font-size: 17px;
+}
+.totalnetpay h3 span{
+    font-weight: bold;
+    font-size: 18px;
+}
+.note{
+    text-align: center;
+    margin-top: 10px;
+   color: rgb(119 116 116);
+   font-size: 14px;
+}
+
+.company-head h3{
+    color: #2c3e50;
+    font-size: 20px;
+}
+.company-head p{
+    font-size: 15px;
+    margin-top: 5px;
+}
+.company-logo img{
+    width: 50px;
+    height: 50px;
+}
+.employee h3{
+    margin-top: 10px;
+    color: rgb(20, 121, 184);
+    padding: 5px;
+    font-size: 18px;
+}
+.salary-details table .gross{
+    font-weight: bold;
+}
+.deduction-details table .deduction{
+    font-weight: bold;
+}
+.netpay{
+    background-color:rgb(175, 213, 236);
+    color: #121c27;
+    width: 100%;
+
+}
+.employee-head p{
+ color: rgb(119 116 116);
+}
+.employee-result p{
+    color:  #2c3e50 ;
+}
+.employeenet-pay{
+    margin-right: 50px;
+}
+.employeenet-pay h3{
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+}
+.employeenet-pay p{
+    text-align: center;
+    font-size: 35px;
+    font-weight: bold;
+}
+.employeenet-pay .paid{
+    text-align: center;
+    font-size: 12px;
+     color: rgb(119 116 116);
+}
+.download{
+    padding: 10px 20px;
+    background-color: green;
+    color:white;
+    border-radius: 10px;
+    text-decoration: none;
+    display: flex;
+    margin: 0 auto;
+    max-width: 180px;
+
+}
