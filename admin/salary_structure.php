@@ -1,10 +1,8 @@
 <?php
-session_start();
+include "../config/auth.php"; 
+requireRole([1,2]);
 include "../config/db.php";
-if(!isset($_SESSION['role']) || $_SESSION['role'] != '1'){
-    header("Location: login.php");
-    exit();
-}
+
 if(isset($_POST['update'])){
     $salary_id = $_POST['salary_id'];
     $basic_salary =$_POST['basic_salary'];
@@ -30,7 +28,11 @@ include('../includes/header.php');
 </head>
 <main>
     <section>
-        <h3>Employees Salary Structure</h3>
+        <div style="display: flex;justify-content:space-between;align-items:center;">
+              <h3>Employees Salary Structure</h3>
+            <a class="salary" href="addsalary.php">+ Add Salary Structure</a>
+        </div>
+      
 
 <?php if(isset($msg)) { echo '<p style="color:green;">'.$msg.'</p>'; } ?>
 

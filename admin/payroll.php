@@ -18,7 +18,6 @@ $block_generate = true;
 if ($filter_month > $today) {
     $msg = "Payroll cannot be generated for a n upcoming month!";
 }
-
 elseif ($filter_month == $today) {
     $msg = "Payroll cannot be generated for an ongoing month!";
 }
@@ -29,7 +28,6 @@ elseif ($filter_month < $last_completed_month) {
          WHERE YEAR(date)=$year AND MONTH(date)=$month_num 
          LIMIT 1"
     );
-
     if (mysqli_num_rows($att_check) == 0) {
         $msg = "No payroll exists for this month because NO attendance data was found.";
     } else {
@@ -70,6 +68,7 @@ if (isset($_POST['generate']) && !$block_generate) {
         $absent_deduction = $per_day_salary * $absent_days;
         $total_deductions = $row['fixed_deduction'] + $absent_deduction;
         $net_salary       = $gross_salary - $total_deductions;
+        $working_days = $present_days + $absent_days;
         $check_sql = "SELECT * FROM payroll 
                       WHERE employee_id=$employee_id 
                       AND month='$month_date'";
@@ -141,7 +140,7 @@ $payroll_result = mysqli_query($conn, $payroll_sql);
             <td><?php echo $row['department']; ?></td>
             <td><?php echo number_format($row['basic_salary'],2); ?></td>
             <td><?php echo number_format($row['hra'],2);?></td>
-            <td><?php echo $total_working_days; ?></td>
+            <td><?php echo $working_days; ?></td>
             <td><?php echo $row['present_days']; ?></td>
             <td><?php echo $row['absent_days']; ?></td>
             <td><?php echo number_format($per_day,2); ?></td>
@@ -150,7 +149,7 @@ $payroll_result = mysqli_query($conn, $payroll_sql);
             <td><?php echo number_format($row['net_salary'],2); ?></td>
             <td><?php echo $row['status'] == 1 ? 'Paid' : 'Unpaid'; ?></td>
             <td>
-                <a href="../admin/payslip.php">View Payslip</a>
+                <a href="../admin/payslip.php?emp=<?= $row['employee_id'] ?>&month=<?= $row['month'] ?>">View Payslip</a>
             </td>
         </tr>
         <?php } ?>

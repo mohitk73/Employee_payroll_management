@@ -1,0 +1,121 @@
+section{
+    padding: 10px;
+    margin-top: 20px;
+}
+
+section h3{
+    color: #2c3e50;
+    font-size: 24px;
+}
+.last{
+    margin-top: 30px;
+     color: #2c3e50;
+     font-size: 17px;
+}
+.salary-summary{
+    margin-top: 10px;
+    display: flex;
+    gap: 30px;
+}
+.salarydetails{
+    display: flex;
+    gap: 40px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+}
+hr{
+    border-right: 1px solid #ddd;
+}
+.salarydetails div{
+    display: grid;
+}
+.salarydetails div h4{
+    color: rgb(128 130 135);
+    font-size: 16px;
+    font-weight: 600;
+}
+.salarydetails div p{
+    font-size: 16px;
+    color: #2c3e50;
+    font-weight: bold;
+}
+.latest{
+    display: grid;
+    gap: 10px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.latest a{
+    background: #1a2633;
+    color: #fff;
+    padding:5px 10px;
+  text-decoration: none;
+    border-radius: 10px;
+    width: 111px;
+}
+.latest h4 {
+    color: rgb(140 139 139);
+}
+.attendance{
+    margin-top: 30px;
+    color: #2c3e50;
+}
+.attendance-summary{
+    margin-top: 10px;
+    display: flex;
+    gap: 30px;
+}
+.attendancedetails{
+     display: flex;
+    gap: 40px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.attendancedetails div{
+    display: grid;
+    align-items: center;
+}
+.attendancedetails div h4{
+    color: rgb(128 130 135);
+    font-size: 16px;
+    font-weight: 600;
+}
+.attendancedetails div p{
+    font-size: 16px;
+    color: #2c3e50;
+    font-weight: bold;
+}
+.attreports a {
+    padding: 5px 10px;
+    border-radius: 10px;
+    background: #1a2633;
+    color: #fff;
+    text-decoration: none;  
+}
+.attendance-status{
+    display: grid;
+    gap: 10px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+}
+.attendance-status h4 {
+    color: rgb(140 139 139);
+}
+.status{
+    padding: 8px 16px;
+    background-color: green;
+    color: white;
+    border-radius: 10px;
+    width: 90px;
+}
+

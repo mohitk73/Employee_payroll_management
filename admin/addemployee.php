@@ -144,7 +144,7 @@ form button:hover {
     <input type="number" name="salary" required><br><br>
 
     <label>Phone</label><br>
-    <input type="text" name="phone" required><br><br>
+    <input type="text" name="phone" maxlength="10" required><br><br>
 
     <label>Position</label><br>
     <input type="text" name="position" required><br><br>

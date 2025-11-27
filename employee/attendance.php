@@ -3,7 +3,6 @@ include '../config/db.php';
 include '../config/auth.php';
 requireRole([0]);
 include '../includes/header.php';
-
 $user_id = $_SESSION['user_id'];
 $today = date("Y-m-d");
 

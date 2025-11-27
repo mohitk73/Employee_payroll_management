@@ -17,8 +17,7 @@
     <a href="payroll.php">Payroll</a>
      <a href="employees.php">Reports</a>
      <a href="employees.php">Payslips</a>
-      <a href="employees.php">Settings</a>
-       <a href="employees.php">Contact Support</a>
+       <a href="employees.php">Employee Queries</a>
     <a href="../logout.php" class="logout">Logout</a>
     <?php } ?>
 
@@ -29,8 +28,6 @@
     <a href="../admin/salary_structure.php">Salary Structure</a>
     <a href="../admin/payroll.php">Payroll</a>
      <a href="../admin/payslip.php">Payslips</a>
-      <a href="employees.php">Settings</a>
-       <a href="employees.php">Contact Support</a>
     <a href="../logout.php" class="logout">Logout</a>
     <?php } ?>
 
@@ -39,16 +36,15 @@
     <a href="../admin/employees.php">Employees List</a>
     <a href="../admin/attendance.php">Attendance</a>
      <a href="employees.php">Payslips</a>
-      <a href="employees.php">Settings</a>
-       <a href="employees.php">Contact Support</a>
+        <a href="employees.php">Contact Support</a>
     <a href="../logout.php" class="logout">Logout</a>
     <?php } ?>
 
     <?php if($_SESSION['role'] == 0) { ?>
     <a href="../employee/dashboard.php">Dashboard</a>
     <a href="../employee/attendance.php">Attendance</a>
-     <a href="employees.php">Payslips</a>
-       <a href="employees.php">Contact Support</a>
+     <a href="../employee/emppayslip.php">Payslips</a>
+       <a href="../employee/contactsupport.php">Contact Support</a>
     <a href="../logout.php" class="logout">Logout</a>
     <?php } ?>
 </div>

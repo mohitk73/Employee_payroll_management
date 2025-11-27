@@ -31,3 +31,11 @@ input[type="submit"]{
     border-radius: 10px;
     border: none;
 }
+.salary{
+    background-color: green;
+    color:white;
+    padding:10px 20px;
+    text-decoration: none;
+    border-radius: 10px;
+
+}

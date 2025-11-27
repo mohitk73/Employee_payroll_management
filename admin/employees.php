@@ -59,7 +59,7 @@ $roles = [
 <?php while($row = mysqli_fetch_assoc($result)) { ?>
 <tr>
     <td><?= $row['id'] ?></td>
-    <td><?= $row['name'] ?></td>
+    <td><?= htmlspecialchars($row['name'] )?></td>
     <td><?= $row['email'] ?></td>
 
     <?php if($_SESSION['role']==1 || $_SESSION['role']==2) { ?>
