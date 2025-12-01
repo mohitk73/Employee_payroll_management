@@ -1,6 +1,6 @@
 <?php
 include "../config/auth.php";
-requireRole([0]);
+requireRole([0,3,2]);
 include "../config/db.php";
 $message= "";
 $emp_id=$_SESSION['user_id'];
@@ -19,6 +19,7 @@ $payslipcheck=mysqli_query($conn,$payslip);
     } else {
         $result = mysqli_fetch_assoc($payslipcheck);
         $perday_salary = $result['basic_salary'] / $result['total_working_days'];
+        $totalworking=$result['present_days']+$result['absent_days'];
         $absentdeduction = $perday_salary * $result['absent_days'];
         $pay_month = $result['month'];
         $pay_date = date("Y-m-06", strtotime($pay_month . " +1 month"));
@@ -89,7 +90,7 @@ include '../includes/header.php';
             </div>
             <div class="employeenet-pay">
                 <h3>Employee Net Pay</h3>
-                <p><?= number_format($result['net_salary'],2) ?></p>
+                <p>₹<?= number_format($result['net_salary'],2) ?></p>
                 <p class="paid">Paid Days : <?= $result['present_days'] ?> | LOP Days : <?= $result['absent_days'] ?> </p>
             </div>
         </div>
@@ -106,15 +107,15 @@ include '../includes/header.php';
                 <tbody>
                     <tr>
                         <td>Basic Salary</td>
-                        <td><?= number_format($result['basic_salary'],2) ?></td>
+                        <td>₹<?= number_format($result['basic_salary'],2) ?></td>
                     </tr>
                     <tr>
                         <td>House Rent Allowance</td>
-                        <td><?= number_format($result['hra'],2) ?></td>
+                        <td>₹<?= number_format($result['hra'],2) ?></td>
                     </tr>
                     <tr class="gross">
                         <td>Gross Earnings</td>
-                        <td><?= number_format($result['gross_salary'],2) ?></td>
+                        <td>₹<?= number_format($result['gross_salary'],2) ?></td>
                     </tr>
                 </tbody>
             </table>
@@ -132,7 +133,7 @@ include '../includes/header.php';
                 <tbody>
                     <tr>
                         <td>Working Days</td>
-                        <td><?= $result['total_working_days'] ?></td>
+                        <td><?= $totalworking ?></td>
                     </tr>
                     <tr>
                         <td>Present Days</td>
@@ -158,26 +159,26 @@ include '../includes/header.php';
                 <tbody>
                     <tr>
                         <td>Professional Tax</td>
-                        <td><?= number_format($result['deduction']) ?></td>
+                        <td>₹<?= number_format($result['deduction']) ?></td>
                     </tr>
                     <tr>
                         <td>Absent Days Deduction</td>
-                        <td><?= number_format($absentdeduction,2) ?></td>
+                        <td>₹<?= number_format($absentdeduction,2) ?></td>
                     </tr>
                     <tr class="deduction">
                         <td>Total Deductions</td>
-                        <td><?= number_format($result['deductions'],2) ?></td>
+                        <td>₹<?= number_format($result['deductions'],2) ?></td>
                     </tr>
                     <tr class="netpay">
                         <td>Net Pay (Gross Earnings - Deductions)</td>
-                        <td><?= number_format($result['net_salary'],2) ?></td>
+                        <td>₹<?= number_format($result['net_salary'],2) ?></td>
                     </tr>
 
                 </tbody>
             </table>
         </div>
         <div class="totalnetpay">
-            <h3>Total Net Payable <span><?= number_format($result['net_salary'],2) ?></span> (Indian Rupees Fifty Thousand)</h3>
+            <h3>Total Net Payable <span>₹<?= number_format($result['net_salary'],2) ?></span></h3>
         </div>
         <hr>
         <div class="note">

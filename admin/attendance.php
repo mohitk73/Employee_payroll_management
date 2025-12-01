@@ -73,7 +73,7 @@ include('../includes/header.php');
     ?>
     <tr>
         <td><?= $row['id'] ?></td>
-        <td><?= $row['name'] ?></td>
+        <td><?= htmlspecialchars($row['name']) ?></td>
         <td><?= $row['position'] ?></td>
 
         <td>

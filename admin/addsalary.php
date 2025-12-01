@@ -13,7 +13,8 @@ $employee_id=$_POST['employee_id'];
     $result = mysqli_query($conn, $sql);
     
     if($result){
-        echo "<p style='color:green;'>Salary structure added successfully!</p>";
+        header("Location: salary_structure.php");
+        exit();
     } else {
         echo "<p style='color:red;'>Error: ".mysqli_error($conn)."</p>";
     }
@@ -50,10 +51,11 @@ include('../includes/header.php');
     <br><br>
 
     <label>Fixed Deductions:</label>
-    <input type="number" name="deductions" value="0">
+    <input type="number" name="deductions" required>
     <br><br>
     <div class="salary"><a href="employees.php" class="back"><- Back to Employees</a>
     <button type="submit" name="submit">Save Salary Structure</button>
+
 </div>
 </form>
     </section>

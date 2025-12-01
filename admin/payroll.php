@@ -63,12 +63,12 @@ if (isset($_POST['generate']) && !$block_generate) {
 
         $present_days = $att['present_days'] ?? 0;
         $absent_days  = $att['absent_days'] ?? ($total_working_days - $present_days);
-        $per_day_salary   = $row['basic_salary'] / $total_working_days;
-        $gross_salary     = $row['basic_salary'] + $row['hra'];
+        $per_day_salary= $row['basic_salary'] / $total_working_days;
+        $gross_salary = $row['basic_salary'] + $row['hra'];
         $absent_deduction = $per_day_salary * $absent_days;
         $total_deductions = $row['fixed_deduction'] + $absent_deduction;
-        $net_salary       = $gross_salary - $total_deductions;
-        $working_days = $present_days + $absent_days;
+        $net_salary = $gross_salary - $total_deductions;
+
         $check_sql = "SELECT * FROM payroll 
                       WHERE employee_id=$employee_id 
                       AND month='$month_date'";
@@ -76,13 +76,11 @@ if (isset($_POST['generate']) && !$block_generate) {
         $check_res = mysqli_query($conn, $check_sql);
 
         if (mysqli_num_rows($check_res) == 0) {
-
             $insert_sql = "INSERT INTO payroll 
                 (employee_id, salary_id, month, basic_salary, hra, present_days, absent_days, gross_salary, deductions, net_salary, status)
                 VALUES
                 ($employee_id, {$row['salary_id']}, '$month_date', {$row['basic_salary']}, {$row['hra']}, 
                 $present_days, $absent_days, $gross_salary, $total_deductions, $net_salary, 0)";
-
             mysqli_query($conn, $insert_sql);
         }
     }
@@ -136,11 +134,11 @@ $payroll_result = mysqli_query($conn, $payroll_sql);
         <tr>
             <td><?php echo date('F Y', strtotime($row['month'])); ?></td>
             <td><?php echo $row['employee_id']; ?></td>
-            <td><?php echo $row['name']; ?></td>
+            <td><?php echo htmlspecialchars($row['name']); ?></td>
             <td><?php echo $row['department']; ?></td>
             <td><?php echo number_format($row['basic_salary'],2); ?></td>
             <td><?php echo number_format($row['hra'],2);?></td>
-            <td><?php echo $working_days; ?></td>
+            <td><?php echo $row['present_days'] + $row['absent_days']; ?></td>
             <td><?php echo $row['present_days']; ?></td>
             <td><?php echo $row['absent_days']; ?></td>
             <td><?php echo number_format($per_day,2); ?></td>

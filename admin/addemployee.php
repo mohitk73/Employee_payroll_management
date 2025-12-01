@@ -5,21 +5,20 @@ requireRole([1,2,3]);
 
 if (isset($_POST['add'])) {
 
-    $name = $_POST['name'];
+    $name = htmlspecialchars($_POST['name']);
     $email = $_POST['email'];
     $password = password_hash($_POST['password'],PASSWORD_DEFAULT);
     $role = $_POST['role'];
-    $salary = $_POST['salary'];
     $phone = $_POST['phone'];
-    $position = $_POST['position'];
-    $department = $_POST['department'];
+    $position = htmlspecialchars($_POST['position']);
+    $department = htmlspecialchars($_POST['department']);
     $date_of_joining = $_POST['date_of_joining'];
-    $address = $_POST['address'];
+    $address = htmlspecialchars($_POST['address']);
     $status = $_POST['status'];
 
     $sql = "INSERT INTO employees 
-        (name, email, password, role, salary, phone, position, department, date_of_joining, address, status)
-        VALUES ('$name', '$email', '$password', '$role', '$salary', '$phone', '$position', '$department', '$date_of_joining', '$address', '$status')";
+        (name, email, password, role, phone, position, department, date_of_joining, address, status)
+        VALUES ('$name', '$email', '$password', '$role', '$phone', '$position', '$department', '$date_of_joining', '$address', '$status')";
     
     if (mysqli_query($conn, $sql)) {
         header("Location:employees.php");
@@ -114,8 +113,6 @@ form button:hover {
     color: #000;
     
 }
-
-
     </style>
 </head>
 <main>
@@ -124,7 +121,7 @@ form button:hover {
     <hr>
 
     <label>Name</label><br>
-    <input type="text" name="name" required><br><br>
+    <input type="text" name="name" pattern="[A-Za-z\s]{2,50}" required><br><br>
 
     <label>Email</label><br>
     <input type="email" name="email" required><br><br>
@@ -140,23 +137,26 @@ form button:hover {
     <option value="3">Manager</option>
 </select><br><br>
 
-    <label>Salary</label><br>
-    <input type="number" name="salary" required><br><br>
-
     <label>Phone</label><br>
-    <input type="text" name="phone" maxlength="10" required><br><br>
+    <input type="text" name="phone" maxlength="10" pattern="[0-9]{10}" required><br><br>
 
     <label>Position</label><br>
     <input type="text" name="position" required><br><br>
 
     <label>Department</label><br>
-    <input type="text" name="department" required><br><br>
+    <!-- <input type="text" name="department" required><br><br> -->
+     <select name="department" required>
+        <option value="">Select Department</option>
+        <option value="IT">IT</option>
+        <option value="HR">HR</option>
+        <option value="Sales">Sales</option>
+</select><br><br>
 
     <label>Date of Joining</label><br>
     <input type="date" name="date_of_joining" required><br><br>
 
     <label>Address</label><br>
-    <textarea name="address" rows="3" required></textarea><br><br>
+    <textarea name="address" rows="3"  pattern="[A-Za-z0-9\s,.-]{5,200}" maxlength="200" required></textarea><br><br>
 
     <label>Status</label><br>
     <select name="status">

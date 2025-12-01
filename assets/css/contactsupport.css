@@ -50,6 +50,8 @@ button{
 }
 .contact-support ul{
     margin-top: 15px;
+    display: grid;
+    gap: 10px;
 }
 .contact-support ul li{
     list-style: none;

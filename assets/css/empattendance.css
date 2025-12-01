@@ -103,3 +103,39 @@ h3{
     padding: 8px 16px;
     border-radius: 10px;
 }
+
+.pagination{
+    margin-top: 20px;
+}
+.pagination ul{
+    display: flex;
+    justify-content: end;
+}
+ul li{
+    list-style: none;
+    border: 1px solid #ddd;
+    padding: 10px 16px;
+    cursor: pointer;
+    
+}
+ul li:hover{
+    background-color:rgb(236, 236, 236);
+    color: white;
+
+}
+nav ul li a{
+    text-decoration: none;
+    color:#2c3e50;
+    display: block;
+}
+ul li.active{
+    background-color: blue;
+    color: white !important;
+}
+ul li a.active{
+    color: white;
+}
+
+.attendance-filter{
+    margin-top: 10px;
+}

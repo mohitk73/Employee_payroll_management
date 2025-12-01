@@ -16,18 +16,16 @@ if (!$emp) {
 }
 
 if (isset($_POST['update'])) {
-    $name = $_POST['name'];
+    $name = htmlspecialchars($_POST['name']);
     $email = $_POST['email'];
-    $salary = $_POST['salary'];
     $phone = $_POST['phone'];
     $role=$_POST['role'];
-    $position = $_POST['position'];
-    $department = $_POST['department'];
-    $address = $_POST['address'];
+    $position = htmlspecialchars($_POST['position']);
+    $department = htmlspecialchars($_POST['department']);
+    $address = htmlspecialchars($_POST['address']);
     $status = $_POST['status'];
 
     $sql = "UPDATE employees SET name='$name',email='$email',
-                salary='$salary',
                 phone='$phone',
                 role='$role',
                 position='$position',
@@ -142,16 +140,13 @@ form label {
 <hr>
 
     Name:<br>
-    <input type="text" name="name" value="<?= $emp['name'] ?>" required><br><br>
+    <input type="text" name="name" value="<?= $emp['name'] ?>" pattern="[A-Za-z\s]{2,50}" required><br><br>
 
     Email:<br>
     <input type="email" name="email" value="<?= $emp['email'] ?>" required><br><br>
 
-    Salary:<br>
-    <input type="number" name="salary" value="<?= $emp['salary'] ?>" required><br><br>
-
     Phone:<br>
-    <input type="text" name="phone" value="<?= $emp['phone'] ?>" required><br><br>
+    <input type="text" name="phone" value="<?= $emp['phone'] ?>" maxlength="10" pattern="[0-9]{10}" required><br><br>
 
      Role:<br>
     <select name="role">
@@ -165,7 +160,12 @@ form label {
     <input type="text" name="position" value="<?= $emp['position'] ?>" required><br><br>
 
     Department:<br>
-    <input type="text" name="department" value="<?= $emp['department'] ?>" required><br><br>
+    <!-- <input type="text" name="department" value="<?= $emp['department'] ?>" required><br><br> -->
+        <select name="department" required>
+            <option value="IT" <?= $emp['department'] == 'IT' ? 'selected' : '' ?>>IT</option>
+            <option value="HR" <?= $emp['department'] == 'HR' ? 'selected' : '' ?>>HR</option>
+            <option value="Sales" <?= $emp['department'] == 'Sales' ? 'selected' : '' ?>>Sales</option>
+        </select><br><br>
 
     Address:<br>
     <textarea name="address" required><?= $emp['address'] ?></textarea><br><br>

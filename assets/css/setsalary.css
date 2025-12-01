@@ -41,7 +41,7 @@ form select {
 }
 
 form button {
-    background: #4a90e2;
+    background: #2c3e50;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -53,12 +53,11 @@ form button {
     width: 200px;
     float: right;
 }
-
 form button:hover {
     background: #357ABD;
 }
 .back  {
-    background-color: #444;
+     background: #2c3e50;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -70,10 +69,8 @@ form button:hover {
     text-decoration: none;
     margin-right: 5px;
 }
-
 .back :hover {
     color: #000;
-    
 }
 .salary{
     display: flex;

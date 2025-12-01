@@ -5,6 +5,17 @@ requireRole([0]);
 include '../includes/header.php';
 $user_id = $_SESSION['user_id'];
 $today = date("Y-m-d");
+$sn=1;
+$limit=10;
+$page=isset($_GET['page'])? (int)$_GET['page']:1;
+if($page<1) $page=1;
+$offset=($page-1) *$limit;
+
+$counttotal="SELECT COUNT(*) AS total from attendance where employee_id='$user_id'";
+$countcheck=mysqli_query($conn,$counttotal);
+$countresult=mysqli_fetch_assoc($countcheck)['total'];
+$totalpages=ceil($countresult/$limit);
+
 
 $atten = "SELECT status FROM attendance WHERE employee_id='$user_id' AND date='$today'";
 $status = mysqli_query($conn, $atten);
@@ -37,7 +48,7 @@ if ($todayattendance) {
     $statusClass = "not-marked";
 }
 
-$attendancehistory = "SELECT * FROM attendance WHERE employee_id='$user_id' ORDER BY date DESC";
+$attendancehistory = "SELECT * FROM attendance WHERE employee_id='$user_id' ORDER BY date DESC LIMIT $limit OFFSET $offset";
 $history = mysqli_query($conn, $attendancehistory);
 
 
@@ -45,6 +56,8 @@ $history = mysqli_query($conn, $attendancehistory);
 
 <head>
     <link rel="stylesheet" href="../assets/css/empattendance.css">
+      
+    <title>Employee Attendance page</title>
 </head>
 <main>
     <section>
@@ -79,15 +92,33 @@ $history = mysqli_query($conn, $attendancehistory);
         </div>
         <div class="attendance-history">
             <h4>Attendance History</h4>
+            <div class="attendance-filter">
+                <form class="GET" class="filter">
+                    <label>From:</label>
+                    <input type="date" name="from" value="<?= $_GET['from']?? '' ?>">
+                    <label>to:</label>
+                    <input type="date" name="to" value="<?= $_GET['to']?? '' ?>">
+
+                    <label>Status</label>
+                    <select name="status">
+                        <option value="">All</option>
+                        <option value="1" <?= (($_GET['status']?? '')=='1')?'selected':'' ?>>Present</option>
+                        <option value="0" <?= (($_GET['status']?? '')=='0')?'selected':'' ?>>Absent</option>
+                    </select>
+                    <button type="submit">Apply</button>
+                </form>
+            </div>
             <table class="attendance-table">
                 <tr>
+                    <th>S.NO</th>
                     <th>Date</th>
                     <th>Status</th>
                     <th>Marked At</th>
                 </tr>
-
+                   
                 <?php while ($row = mysqli_fetch_assoc($history)) { ?>
                     <tr>
+                        <td><?= $sn++ ?></td>
                         <td><?= $row['date'] ?></td>
                         <td>
                             <?php if ($row['status'] == 1) { ?>
@@ -101,6 +132,22 @@ $history = mysqli_query($conn, $attendancehistory);
                 <?php } ?>
 
             </table>
+        </div>
+
+        <div class="pagination">
+            <nav>
+            <ul>
+                <?php if($page >1):  ?>
+                <li><a href="?page=<?= $page-1 ?>">Previous</a></li>
+                <?php endif; ?>
+                <?php for($i=1;$i<=$totalpages;$i++): ?>
+                 <li class="<?= ($i==$page)? 'active': '' ?>"><a href="?page=<?= $i ?>"class="<?= ($i==$page)? 'active': '' ?>"><?= $i ?></a></li>
+                 <?php endfor; ?>
+<?php if($page<$totalpages): ?>
+                <li><a href="?page=<?= $page+1 ?>">Next</a></li>
+                <?php endif; ?>
+            </ul>
+            </nav>
         </div>
     </section>
 </main>

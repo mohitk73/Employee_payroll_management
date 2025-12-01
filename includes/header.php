@@ -3,21 +3,20 @@
 <html>
 <head>
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="../assets/css/admindashboard.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/header.css">
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 <div class="sidebar">
     <h1><i class="fas fa-file-invoice-dollar"></i>Mind2Web Payroll</h1>
      <?php if($_SESSION['role'] == 1) { ?>
-    <a href="employees.php">Dashboard</a>
-    <a href="employees.php">Employees</a>
-    <a href="attendance.php">Leave and Attendance</a>
-    <a href="salary_structure.php">Salary Structure</a>
-    <a href="payroll.php">Payroll</a>
-     <a href="employees.php">Reports</a>
-     <a href="employees.php">Payslips</a>
-       <a href="employees.php">Employee Queries</a>
+    <a href="../admin/dashboard.php">Dashboard</a>
+    <a href="../admin/employees.php">Employees</a>
+    <a href="../admin/attendance.php">Leave and Attendance</a>
+    <a href="../admin/salary_structure.php">Salary Structure</a>
+    <a href="../admin/payroll.php">Payroll</a>
+     <a href="../admin/payslips.php">Payslips</a>
+       <a href="../admin/employee_queries.php">Employee Queries</a>
     <a href="../logout.php" class="logout">Logout</a>
     <?php } ?>
 
@@ -32,11 +31,11 @@
     <?php } ?>
 
     <?php if($_SESSION['role'] == 3) { ?>
-    <a href="employees.php">Dashboard</a>
+    <a href="../manager/managerdashboard.php">Dashboard</a>
     <a href="../admin/employees.php">Employees List</a>
     <a href="../admin/attendance.php">Attendance</a>
-     <a href="employees.php">Payslips</a>
-        <a href="employees.php">Contact Support</a>
+     <a href="../manager/managerpayslip.php">Payslips</a>
+        <a href="../contactsupport.php">Contact Support</a>
     <a href="../logout.php" class="logout">Logout</a>
     <?php } ?>
 
@@ -44,7 +43,7 @@
     <a href="../employee/dashboard.php">Dashboard</a>
     <a href="../employee/attendance.php">Attendance</a>
      <a href="../employee/emppayslip.php">Payslips</a>
-       <a href="../employee/contactsupport.php">Contact Support</a>
+       <a href="../contactsupport.php">Contact Support</a>
     <a href="../logout.php" class="logout">Logout</a>
     <?php } ?>
 </div>
@@ -64,7 +63,7 @@
         <nav>
             <ul>
                 <li><a href="../admin/profile.php">View Profile</a></li>
-                  <li><a href="">Get Help</a></li>
+                  <li><a href="../contactsupport.php">Get Help</a></li>
                     <li><a href="../logout.php">Logout</a></li>
             </ul>
         </nav>

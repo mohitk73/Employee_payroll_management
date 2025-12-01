@@ -59,7 +59,7 @@ hr{
 }
 .attendance-details table{
     border-collapse: collapse;
-    width: 136%;
+    width: 131%;
 }
 .attendance-details table tbody{
     text-align: left;
@@ -77,7 +77,7 @@ hr{
 }
 .deduction-details table{
     border-collapse: collapse;
-    width: 100%;
+    width: 94%;
 }
 .deduction-details table th{
     text-align:left;

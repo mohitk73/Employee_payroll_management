@@ -3,7 +3,7 @@ include "../config/auth.php";
 requireRole([1,2]);
 include "../config/db.php";
 
-if(isset($_POST['update'])){
+/* if(isset($_POST['update'])){
     $salary_id = $_POST['salary_id'];
     $basic_salary =$_POST['basic_salary'];
     $hra =$_POST['hra'];
@@ -14,7 +14,7 @@ if(isset($_POST['update'])){
             WHERE id='$salary_id'";
     mysqli_query($conn, $sql);
     $msg = "Salary updated successfully!";
-}
+} */
 
 $sql = "SELECT s.id, e.name, s.basic_salary, s.hra_allowances AS hra, s.deduction AS deductions
         FROM salaries s
@@ -48,13 +48,12 @@ include('../includes/header.php');
     <?php while($row = mysqli_fetch_assoc($result)){ ?>
     <tr>
         <form method="post" action="">
-            <td><?php echo $row['name']; ?></td>
+            <td><?php echo htmlspecialchars($row['name']); ?></td>
             <td><?php echo $row['basic_salary'];?></td>
             <td><?php echo $row['hra']; ?></td>
             <td><?php echo $row['deductions']; ?></td>
             <td>
-                <input type="hidden" name="salary_id" value="<?php echo $row['id']; ?>">
-                <input type="submit" name="update" value="Update">
+                <a href="updatesalary.php?id=<?= $row['id'] ?>">Update</a>
             </td>
         </form>
     </tr>
