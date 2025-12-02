@@ -3,10 +3,23 @@ include "../config/auth.php";
 requireRole([1,2]);
 include "../config/db.php";
 include '../includes/header.php';
-
 $filter_month = $_POST['month'] ?? date('Y-m'); 
-list($year, $month_num) = explode('-', $filter_month);
+$month=$_GET['filter_month'] ?? '';
+$limit = 3;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
+$offset = ($page - 1) * $limit;
+$sn=($page-1) *$limit+1;
+$where = "1"; 
+if (!empty($month)) {
+    $where .= " AND DATE_FORMAT(month, '%Y-%m') = '$month'";
+}
+$counttotal = "SELECT COUNT(*) AS total from payroll WHERE $where";
+$countcheck = mysqli_query($conn, $counttotal);
+$countresult = mysqli_fetch_assoc($countcheck)['total'];
+$totalpages = ceil($countresult / $limit);
 
+list($year, $month_num) = explode('-', $filter_month);
 $total_working_days = cal_days_in_month(CAL_GREGORIAN, $month_num, $year);
 
 $month_date  = $filter_month . '-01';
@@ -91,13 +104,14 @@ $payroll_sql = "SELECT p.*, e.name, e.department
                 FROM payroll p
                 JOIN employees e ON p.employee_id = e.id
                 WHERE p.month BETWEEN '$month_start' AND '$month_end'
-                ORDER BY p.month DESC";
+                ORDER BY p.month DESC LIMIT $limit OFFSET $offset";
 
 $payroll_result = mysqli_query($conn, $payroll_sql);
 ?>
 
 <head>
     <link rel="stylesheet" href="../assets/css/payroll.css" >
+    <link rel="stylesheet" href="../assets/css/pagination.css" >
 </head>
 <main>
     <section>
@@ -152,6 +166,21 @@ $payroll_result = mysqli_query($conn, $payroll_sql);
         </tr>
         <?php } ?>
         </table>
+        <div class="pagination">
+            <nav>
+                <ul>
+                    <?php if ($page > 1):  ?>
+                        <li><a href="?month=<?= $month ?>&page=<?= $page - 1 ?>">Previous</a></li>
+                    <?php endif; ?>
+                    <?php for ($i = 1; $i <= $totalpages; $i++): ?>
+                        <li class="<?= ($i == $page) ? 'active' : '' ?>"><a href="?month=<?= $month ?>&page=<?= $i ?>" class="<?= ($i == $page) ? 'active' : '' ?>"><?= $i ?></a></li>
+                    <?php endfor; ?>
+                    <?php if ($page < $totalpages): ?>
+                        <li><a href="?month=<?= $month ?>&page=<?= $page + 1 ?>">Next</a></li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
+        </div>
     </section><br>
     <br>
     <a class="back"  href="../admin/employees.php"><- Back To Dashboard</a>

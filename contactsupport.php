@@ -3,6 +3,23 @@ include('./config/auth.php');
 requireRole([0,3]);
 include('./config/db.php');
 include('./includes/header.php');
+$message='';
+if(isset($_POST['submit'])){
+    $employee_id=$_SESSION['user_id'];
+    $name=htmlspecialchars($_POST['name']);
+     $email=htmlspecialchars($_POST['email']);
+      $subject=htmlspecialchars($_POST['subject']);
+      $message=htmlspecialchars($_POST['message']);
+
+      $sql="INSERT INTO queries(employee_id,name,email,subject,message)
+       VALUES('$employee_id','$name','$email','$subject','$message')";
+       if($conn->query($sql)==true){
+        $message="Message send successfully";
+       }
+       else{
+        echo "error". mysqli_error($conn);
+       }
+}
 
 ?>
 <head>
@@ -12,8 +29,9 @@ include('./includes/header.php');
     <section>
         <h3>Contact Support</h3>
         <div class="contact-form">
+            <p style="color: green;"><?= htmlspecialchars($message) ?></p>
             <h4>Send us a message</h4>
-            <form method="post" action="">
+            <form method="POST" action="">
                 <label for="name">Your Name:</label><br>
                 <input type="text" id="name" name="name" required><br><br>
                 <label for="email">Your Email:</label><br>

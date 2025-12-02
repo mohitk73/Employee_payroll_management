@@ -16,7 +16,7 @@
     <a href="../admin/salary_structure.php">Salary Structure</a>
     <a href="../admin/payroll.php">Payroll</a>
      <a href="../admin/payslips.php">Payslips</a>
-       <a href="../admin/employee_queries.php">Employee Queries</a>
+       <a href="../admin/empqueries.php">Employee Queries</a>
     <a href="../logout.php" class="logout">Logout</a>
     <?php } ?>
 

@@ -1,0 +1,37 @@
+section {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 50px; 
+}
+section h3{
+    color: #2e3c50;
+}
+.querydata{
+    margin-top: 30px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+table th, 
+table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+table th {
+    background: #1a2633;
+    color: white;
+}
+button[type='submit']{
+    padding:5px 10px;
+    background-color: green;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+

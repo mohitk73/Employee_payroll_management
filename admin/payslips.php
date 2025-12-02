@@ -2,12 +2,28 @@
 include '../config/auth.php';
 requireRole([1,2]);
 include '../config/db.php';
+if (isset($_GET['month']) && !empty($_GET['month'])){
+$limit = 3;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
+$offset = ($page - 1) * $limit;
+$sn=($page-1) *$limit+1;
+$where = "1"; 
+if (!empty($month)) {
+    $where .= " AND DATE_FORMAT(month, '%Y-%m') = '$month'";
+}
+$counttotal = "SELECT COUNT(*) AS total from payroll WHERE $where ";
+$countcheck = mysqli_query($conn, $counttotal);
+$countresult = mysqli_fetch_assoc($countcheck)['total'];
+$totalpages = ceil($countresult / $limit);
+}
 if (isset($_GET['month'])) {
             $selectmonth = $_GET['month'];
-            $payslips = $sql = "SELECT p.*, e.id, e.name
+            $payslips = "SELECT p.*, e.id, e.name
               FROM payroll p
         JOIN employees e ON p.employee_id = e.id
-        WHERE DATE_FORMAT(p.month, '%Y-%m') = '$selectmonth'";
+        WHERE DATE_FORMAT(p.month, '%Y-%m') = '$selectmonth'
+        LIMIT $limit OFFSET $offset";
                 $payslips = mysqli_query($conn, $payslips);
 }
 
@@ -15,6 +31,7 @@ include '../includes/header.php';
 ?>
 <head>
     <link rel="stylesheet" href="../assets/css/payslipsadmin.css">
+    <link rel="stylesheet" href="../assets/css/pagination.css">
 </head>
 <main>
     <section>
@@ -50,7 +67,7 @@ include '../includes/header.php';
                     <?php }?>
                 </tbody>
             </table>
-            
+           <?php include '../includes/pagination.php' ?>
         </div>  
     </section>
 </main>

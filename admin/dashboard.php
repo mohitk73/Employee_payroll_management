@@ -4,6 +4,8 @@ requireRole([1]);
 include '../config/db.php';
 include('../includes/header.php');
 
+$today = date("Y-m-d");
+$count=0;
 $role = [
     1 => 'Admin'
 ];
@@ -31,6 +33,27 @@ $presenttodayresult=mysqli_fetch_assoc($presenttodaycheck);
 $absenttoday="SELECT COUNT(*) AS totalabsent FROM attendance WHERE date=CURDATE() AND status=0";
 $absenttodaycheck=mysqli_query($conn,$absenttoday);
 $absenttodayresult=mysqli_fetch_assoc($absenttodaycheck);
+
+$api_key = "Rsz13oNw618tGiUAVIGdhn44kF2yeyBE";
+$country = "IN"; 
+$year = 2025;
+
+$url = "https://calendarific.com/api/v2/holidays?api_key={$api_key}&country={$country}&year={$year}";
+
+ $ch = curl_init($url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($ch);
+$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+$holidays = [];
+
+if ($httpcode == 200 && $response) {
+    $data = json_decode($response, true);
+    if (isset($data['response']['holidays'])) {
+        $holidays = $data['response']['holidays'];
+    }
+} 
 ?>
 
 <head>
@@ -140,7 +163,7 @@ $absenttodayresult=mysqli_fetch_assoc($absenttodaycheck);
                 <div class="attendance-summary">
                     <div>
                         <h4>Total Employees</h4>
-                        <p><?= $activeemployeeresult['totalactive'] ?></p>
+                        <p><?= $payrollresult['totalemployee'] ?></p>
                     </div><hr>
                     <div>
                         <h4>Present Today</h4>
@@ -158,14 +181,37 @@ $absenttodayresult=mysqli_fetch_assoc($absenttodaycheck);
                         <a href="../admin/attendance.php">View Details</a>
                         <p></p>
                     </div>
-
+                </div>
+            </div>
+        <div class="upcomingevents">
+            <h3>Upcoming Events</h3>
+            <div class="festival">
+                    <div class="festivallist">
+                        <?php if(!empty($holidays)) {?>
+                            <?php foreach($holidays as $event) {
+                                if ($event['date']['iso'] >= $today) {?>
+                        <div>
+                            <h5><?= htmlspecialchars($event['name']) ?></h5>
+                            <p><?= htmlspecialchars(substr($event['date']['iso'], 0, 10)) ?></p>
+                             </div>
+                            <?php $count++;
+                        } if($count>=4) break;}
+                         if ($count == 0) {
+            echo "<h5>No upcoming events found</h5>";
+        } }
+                         else{
+                            echo "no event found";
+                             }
+                             ?>
+                    </div>
+                    
                 </div>
 
-            </div>
+        </div>
+
+
             <div>
-
             </div>
-
         </section>
     </main>
 </body>

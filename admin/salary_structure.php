@@ -2,29 +2,27 @@
 include "../config/auth.php"; 
 requireRole([1,2]);
 include "../config/db.php";
+$limit = 10;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
+$offset = ($page - 1) * $limit;
+$sn=($page-1) *$limit+1;
 
-/* if(isset($_POST['update'])){
-    $salary_id = $_POST['salary_id'];
-    $basic_salary =$_POST['basic_salary'];
-    $hra =$_POST['hra'];
-    $deductions =$_POST['deductions'];
-
-    $sql = "UPDATE salaries 
-            SET basic_salary='$basic_salary', hra_allowances='$hra',deduction='$deductions' 
-            WHERE id='$salary_id'";
-    mysqli_query($conn, $sql);
-    $msg = "Salary updated successfully!";
-} */
+$counttotal = "SELECT COUNT(*) AS total from salaries ORDER BY id DESC";
+$countcheck = mysqli_query($conn, $counttotal);
+$countresult = mysqli_fetch_assoc($countcheck)['total'];
+$totalpages = ceil($countresult / $limit);
 
 $sql = "SELECT s.id, e.name, s.basic_salary, s.hra_allowances AS hra, s.deduction AS deductions
         FROM salaries s
-        JOIN employees e ON s.employee_id = e.id";
+        JOIN employees e ON s.employee_id = e.id LIMIT $limit OFFSET $offset";
 $result = mysqli_query($conn, $sql);
 
 include('../includes/header.php');
 ?>
 <head>
     <link rel="stylesheet" href="../assets/css/salarystructure.css" >
+    <link rel="stylesheet" href="../assets/css/pagination.css" >
 </head>
 <main>
     <section>
@@ -38,6 +36,7 @@ include('../includes/header.php');
 
 <table border="1" cellpadding="10">
     <tr>
+        <th>S.no</th>
         <th>Employee Name</th>
         <th>Basic Salary</th>
         <th>HRA</th>
@@ -48,6 +47,7 @@ include('../includes/header.php');
     <?php while($row = mysqli_fetch_assoc($result)){ ?>
     <tr>
         <form method="post" action="">
+            <td><?= $sn++ ?></td>
             <td><?php echo htmlspecialchars($row['name']); ?></td>
             <td><?php echo $row['basic_salary'];?></td>
             <td><?php echo $row['hra']; ?></td>
@@ -59,6 +59,21 @@ include('../includes/header.php');
     </tr>
     <?php } ?>
 </table>
+<div class="pagination">
+            <nav>
+                <ul>
+                    <?php if ($page > 1):  ?>
+                        <li><a href="?page=<?= $page - 1 ?>">Previous</a></li>
+                    <?php endif; ?>
+                    <?php for ($i = 1; $i <= $totalpages; $i++): ?>
+                        <li class="<?= ($i == $page) ? 'active' : '' ?>"><a href="?page=<?= $i ?>" class="<?= ($i == $page) ? 'active' : '' ?>"><?= $i ?></a></li>
+                    <?php endfor; ?>
+                    <?php if ($page < $totalpages): ?>
+                        <li><a href="?page=<?= $page + 1 ?>">Next</a></li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
+        </div>
 
     </section>
 </main>

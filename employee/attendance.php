@@ -5,16 +5,28 @@ requireRole([0]);
 include '../includes/header.php';
 $user_id = $_SESSION['user_id'];
 $today = date("Y-m-d");
-$sn=1;
-$limit=10;
-$page=isset($_GET['page'])? (int)$_GET['page']:1;
-if($page<1) $page=1;
-$offset=($page-1) *$limit;
-
-$counttotal="SELECT COUNT(*) AS total from attendance where employee_id='$user_id'";
-$countcheck=mysqli_query($conn,$counttotal);
-$countresult=mysqli_fetch_assoc($countcheck)['total'];
-$totalpages=ceil($countresult/$limit);
+$limit = 10;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
+$offset = ($page - 1) * $limit;
+$sn = ($page - 1) * $limit + 1;
+$from = $_GET['from'] ?? '';
+$to = $_GET['to'] ?? '';
+$status = $_GET['status'] ?? '';
+$where = "employee_id='$user_id'";
+if ($from != "") {
+    $where .= " AND date >= '$from'";
+}
+if ($to != "") {
+    $where .= " AND date <= '$to'";
+}
+if ($status != "") {
+    $where .= " AND status='$status'";
+}
+$counttotal = "SELECT COUNT(*) AS total from attendance WHERE $where";
+$countcheck = mysqli_query($conn, $counttotal);
+$countresult = mysqli_fetch_assoc($countcheck)['total'];
+$totalpages = ceil($countresult / $limit);
 
 
 $atten = "SELECT status FROM attendance WHERE employee_id='$user_id' AND date='$today'";
@@ -48,7 +60,7 @@ if ($todayattendance) {
     $statusClass = "not-marked";
 }
 
-$attendancehistory = "SELECT * FROM attendance WHERE employee_id='$user_id' ORDER BY date DESC LIMIT $limit OFFSET $offset";
+$attendancehistory = "SELECT * FROM attendance WHERE $where ORDER BY date DESC LIMIT $limit OFFSET $offset";
 $history = mysqli_query($conn, $attendancehistory);
 
 
@@ -56,7 +68,7 @@ $history = mysqli_query($conn, $attendancehistory);
 
 <head>
     <link rel="stylesheet" href="../assets/css/empattendance.css">
-      
+
     <title>Employee Attendance page</title>
 </head>
 <main>
@@ -93,18 +105,23 @@ $history = mysqli_query($conn, $attendancehistory);
         <div class="attendance-history">
             <h4>Attendance History</h4>
             <div class="attendance-filter">
-                <form class="GET" class="filter">
-                    <label>From:</label>
-                    <input type="date" name="from" value="<?= $_GET['from']?? '' ?>">
-                    <label>to:</label>
-                    <input type="date" name="to" value="<?= $_GET['to']?? '' ?>">
-
-                    <label>Status</label>
-                    <select name="status">
-                        <option value="">All</option>
-                        <option value="1" <?= (($_GET['status']?? '')=='1')?'selected':'' ?>>Present</option>
-                        <option value="0" <?= (($_GET['status']?? '')=='0')?'selected':'' ?>>Absent</option>
-                    </select>
+                <form method="GET" class="filter">
+                    <div>
+                        <label>From:</label>
+                        <input type="date" name="from" value="<?= $_GET['from'] ?? '' ?>">
+                    </div>
+                    <div>
+                        <label>to:</label>
+                        <input type="date" name="to" value="<?= $_GET['to'] ?? '' ?>">
+                    </div>
+                    <div>
+                        <label>Status:</label>
+                        <select name="status">
+                            <option value="">All</option>
+                            <option value="1" <?= (($_GET['status'] ?? '') == '1') ? 'selected' : '' ?>>Present</option>
+                            <option value="0" <?= (($_GET['status'] ?? '') == '0') ? 'selected' : '' ?>>Absent</option>
+                        </select>
+                    </div>
                     <button type="submit">Apply</button>
                 </form>
             </div>
@@ -115,7 +132,7 @@ $history = mysqli_query($conn, $attendancehistory);
                     <th>Status</th>
                     <th>Marked At</th>
                 </tr>
-                   
+
                 <?php while ($row = mysqli_fetch_assoc($history)) { ?>
                     <tr>
                         <td><?= $sn++ ?></td>
@@ -134,20 +151,6 @@ $history = mysqli_query($conn, $attendancehistory);
             </table>
         </div>
 
-        <div class="pagination">
-            <nav>
-            <ul>
-                <?php if($page >1):  ?>
-                <li><a href="?page=<?= $page-1 ?>">Previous</a></li>
-                <?php endif; ?>
-                <?php for($i=1;$i<=$totalpages;$i++): ?>
-                 <li class="<?= ($i==$page)? 'active': '' ?>"><a href="?page=<?= $i ?>"class="<?= ($i==$page)? 'active': '' ?>"><?= $i ?></a></li>
-                 <?php endfor; ?>
-<?php if($page<$totalpages): ?>
-                <li><a href="?page=<?= $page+1 ?>">Next</a></li>
-                <?php endif; ?>
-            </ul>
-            </nav>
-        </div>
+        <?php include '../includes/pagination.php' ?>
     </section>
 </main>

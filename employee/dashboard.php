@@ -1,8 +1,15 @@
 <?php
+
 include "../config/auth.php";
 requireRole([0]);
 include "../config/db.php";
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+$today = date("Y-m-d");
+$count=0;
 $user_id = $_SESSION['user_id'];
+
 
 $dashboard = "SELECT p.gross_salary, p.deductions,p.net_salary,p.month,p.present_days,p.absent_days,
 SUM(CASE WHEN a.status = 1 THEN 1 END) AS presentdays,
@@ -30,6 +37,27 @@ $totalworkingdays = $dashboarddetails['presentdays'] + $dashboarddetails['absent
 $attendancepercentage = ($totalworkingdays > 0) ? round($dashboarddetails['presentdays'] / $totalworkingdays * 100, 2) : 0;
 $pay_date = date("Y-m-06", strtotime($dashboarddetails['month'] . " +1 month"));
 $nextpay_date = date("Y-m-06", strtotime($dashboarddetails['month'] . " +2 month"));
+
+$api_key = "Rsz13oNw618tGiUAVIGdhn44kF2yeyBE";
+$country = "IN"; 
+$year = 2025;
+
+$url = "https://calendarific.com/api/v2/holidays?api_key={$api_key}&country={$country}&year={$year}";
+
+ $ch = curl_init($url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($ch);
+$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+$holidays = [];
+
+if ($httpcode == 200 && $response) {
+    $data = json_decode($response, true);
+    if (isset($data['response']['holidays'])) {
+        $holidays = $data['response']['holidays'];
+    }
+} 
 
 include('../includes/header.php');
 ?>
@@ -155,21 +183,25 @@ include('../includes/header.php');
                 <h4>Announcements</h4>
             </div>
             <div class="notification">
-                 <h4>Upcoming Festivals</h4>
+                 <h4>Upcoming Events</h4>
                 <div class="festival">
                     <div class="festivelist">
+                        <?php if(!empty($holidays)) {?>
+                            <?php foreach($holidays as $event) {
+                                if ($event['date']['iso'] >= $today) {?>
                         <div>
-                            <h5>Christmas</h5>
-                            <p>25th Dec 2025</p>
-                        </div>
-                        <div>
-                            <h5>New Year</h5>
-                            <p>1st Jan 2026</p>
-                        </div>
-                        <div>
-                            <h5>Republic Day</h5>
-                            <p>26th Jan 2026</p>
-                        </div>
+                            <h5><?= htmlspecialchars($event['name']) ?></h5>
+                            <p><?= htmlspecialchars(substr($event['date']['iso'], 0, 10)) ?></p>
+                             </div>
+                            <?php $count++;
+                        } if($count>=4) break;}
+                         if ($count == 0) {
+            echo "<h5>No upcoming events found</h5>";
+        } }
+                         else{
+                            echo "no event found";
+                             }
+                             ?>
                     </div>
                     <div class="next-salary">
                         <h5>Next Salary Date</h5>

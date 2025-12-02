@@ -132,10 +132,6 @@ include '../includes/header.php';
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Working Days</td>
-                        <td><?= $totalworking ?></td>
-                    </tr>
-                    <tr>
                         <td>Present Days</td>
                         <td><?= $result['present_days'] ?></td>
                     </tr>
