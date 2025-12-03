@@ -2,18 +2,35 @@
 include "../config/auth.php";
 requireRole([1, 2, 3]);
 include "../config/db.php";
-$limit = 10;
+$limit = 5;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($page < 1) $page = 1;
 $offset = ($page - 1) * $limit;
 $sn = ($page - 1) * $limit + 1;
+$where = [];
+if (!empty($_GET['name'])) {
+    $name = mysqli_real_escape_string($conn, $_GET['name']);
+    $where[] = "name LIKE '%$name%'";
+}
 
-$counttotal = "SELECT COUNT(*) AS total from employees";
+if (!empty($_GET['department'])) {
+    $department = mysqli_real_escape_string($conn, $_GET['department']);
+    $where[] = "department = '$department'";
+}
+
+if (isset($_GET['status']) && ($_GET['status'] === "1" || $_GET['status'] === "0")) {
+    $status = mysqli_real_escape_string($conn, $_GET['status']);
+    $where[] = "status = '$status'";
+}
+
+$wherestm = count($where) > 0 ? "WHERE " . implode(" AND ", $where) : "";
+
+$counttotal = "SELECT COUNT(*) AS total from employees $wherestm ";
 $countcheck = mysqli_query($conn, $counttotal);
 $countresult = mysqli_fetch_assoc($countcheck)['total'];
 $totalpages = ceil($countresult / $limit);
 
-$sql = "SELECT * FROM employees ORDER BY id  LIMIT $limit OFFSET $offset";
+$sql = "SELECT * FROM employees $wherestm ORDER BY id  LIMIT $limit OFFSET $offset";
 $result = mysqli_query($conn, $sql);
 
 if (isset($_GET['id'])) {
@@ -51,6 +68,30 @@ include '../includes/header.php';
                                     ?>>
             < Back to Dashboard</a>
                 <br><br>
+
+                <form method="GET" class="filter">
+               <input type="text" name="name" placeholder="Search by name"
+                  value="<?= isset($_GET['name']) ? htmlspecialchars($_GET['name']) : '' ?>">
+
+    <select name="department">
+        <option value="">All Departments</option>
+        <?php
+        $departments = ["HR", "Sales", "IT"]; 
+        foreach ($departments as $dept) {
+            $selected = (isset($_GET['department']) && $_GET['department'] == $dept) ? "selected" : "";
+            echo "<option value='$dept' $selected>$dept</option>";
+        }
+        ?>
+    </select>
+
+    <select name="status">
+        <option value="">All Status</option>
+        <option value="1" <?= (isset($_GET['status']) && $_GET['status'] === "1") ? "selected" : "" ?>>Active</option>
+        <option value="0" <?= (isset($_GET['status']) && $_GET['status'] === "0") ? "selected" : "" ?>>Inactive</option>
+    </select>
+
+    <button type="submit">Filter</button>
+</form>
 
                 <table border="1" cellpadding="8" cellspacing="0">
                     <tr>

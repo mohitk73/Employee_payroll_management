@@ -143,11 +143,12 @@ hr{
     color: rgb(140 139 139);
 }
 .status{
-    padding: 8px 16px;
-    background-color: green;
+margin-top: 5px;
+}
+.status span{
+    padding: 5px 10px;
     color: white;
     border-radius: 10px;
-    width: 85px;
 }
 
 .attendance-trend{
@@ -243,4 +244,10 @@ table th {
     font-size: 18px;
     font-weight: bold;
 }
-
+.query{
+    margin-top: 20px;
+}
+.query h3{
+    font-size: 20px;
+    color: #2c3e50;
+}

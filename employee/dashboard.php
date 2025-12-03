@@ -7,10 +7,9 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 $today = date("Y-m-d");
-$count=0;
+$sn=1;
+$count = 0;
 $user_id = $_SESSION['user_id'];
-
-
 $dashboard = "SELECT p.gross_salary, p.deductions,p.net_salary,p.month,p.present_days,p.absent_days,
 SUM(CASE WHEN a.status = 1 THEN 1 END) AS presentdays,
 SUM(CASE WHEN a.status = 0 THEN 1 END) AS absentdays
@@ -27,11 +26,7 @@ $dashboarddetails = mysqli_fetch_assoc($detailcheck);
 $attendancestatus = "SELECT a.* FROM attendance a WHERE employee_id='$user_id' AND date=CURDATE()";
 $statuscheck = mysqli_query($conn, $attendancestatus);
 $attendancestatus = mysqli_fetch_assoc($statuscheck);
-if ($attendancestatus) {
-    $dashboarddetails['status'] = ($attendancestatus['status'] == 1) ? "Present" : "Absent";
-} else {
-    $dashboarddetails['status'] = "Not Marked";
-}
+
 $totalworking = $dashboarddetails['present_days'] + $dashboarddetails['absent_days'];
 $totalworkingdays = $dashboarddetails['presentdays'] + $dashboarddetails['absentdays'];
 $attendancepercentage = ($totalworkingdays > 0) ? round($dashboarddetails['presentdays'] / $totalworkingdays * 100, 2) : 0;
@@ -39,12 +34,12 @@ $pay_date = date("Y-m-06", strtotime($dashboarddetails['month'] . " +1 month"));
 $nextpay_date = date("Y-m-06", strtotime($dashboarddetails['month'] . " +2 month"));
 
 $api_key = "Rsz13oNw618tGiUAVIGdhn44kF2yeyBE";
-$country = "IN"; 
+$country = "IN";
 $year = 2025;
 
 $url = "https://calendarific.com/api/v2/holidays?api_key={$api_key}&country={$country}&year={$year}";
 
- $ch = curl_init($url);
+$ch = curl_init($url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -57,7 +52,10 @@ if ($httpcode == 200 && $response) {
     if (isset($data['response']['holidays'])) {
         $holidays = $data['response']['holidays'];
     }
-} 
+}
+
+$query="SELECT * FROM queries WHERE employee_id='$user_id' ORDER BY created_at DESC";
+$querycheck=mysqli_query($conn,$query);
 
 include('../includes/header.php');
 ?>
@@ -150,7 +148,13 @@ include('../includes/header.php');
                 </div>
                 <div class="attendance-status">
                     <h4>Today's Attendance Status</h4>
-                    <p class="status"><?= $dashboarddetails['status'] ?></p>
+                    <p class="status"><?php if($attendancestatus['status']=='1'){ ?>
+                        <span style="background-color: green;">Present</span>
+                        <?php } else{?>
+                            <span style="background-color: red;">Absent</span>
+                            <?php } ?>
+                    
+                    </p>
                 </div>
             </div>
 
@@ -172,8 +176,6 @@ include('../includes/header.php');
                             <td><?= $dashboarddetails['present_days'] ?></td>
                             <td><?= $dashboarddetails['absent_days'] ?></td>
                         </tr>
-
-
                     </tbody>
                 </table>
 
@@ -183,30 +185,66 @@ include('../includes/header.php');
                 <h4>Announcements</h4>
             </div>
             <div class="notification">
-                 <h4>Upcoming Events</h4>
+                <h4>Upcoming Events</h4>
                 <div class="festival">
                     <div class="festivelist">
-                        <?php if(!empty($holidays)) {?>
-                            <?php foreach($holidays as $event) {
-                                if ($event['date']['iso'] >= $today) {?>
-                        <div>
-                            <h5><?= htmlspecialchars($event['name']) ?></h5>
-                            <p><?= htmlspecialchars(substr($event['date']['iso'], 0, 10)) ?></p>
-                             </div>
-                            <?php $count++;
-                        } if($count>=4) break;}
-                         if ($count == 0) {
-            echo "<h5>No upcoming events found</h5>";
-        } }
-                         else{
+                        <?php if (!empty($holidays)) { ?>
+                            <?php foreach ($holidays as $event) {
+                                if ($event['date']['iso'] >= $today) { ?>
+                                    <div>
+                                        <h5><?= htmlspecialchars($event['name']) ?></h5>
+                                        <p><?= htmlspecialchars(substr($event['date']['iso'], 0, 10)) ?></p>
+                                    </div>
+                        <?php $count++;
+                                }
+                                if ($count >= 4) break;
+                            }
+                            if ($count == 0) {
+                                echo "<h5>No upcoming events found</h5>";
+                            }
+                        } else {
                             echo "no event found";
-                             }
-                             ?>
+                        }
+                        ?>
                     </div>
                     <div class="next-salary">
                         <h5>Next Salary Date</h5>
                         <p><?= $nextpay_date ?></p>
                     </div>
+                </div>
+            </div>
+
+            <div class="query">
+                <h3>Queries Record</h3>
+                <div class="queries-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>S.no</th>
+                                <th>Query Id</th>
+                                <th>Subject</th>
+                                <th>Message</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                             <?php while($queryresult=mysqli_fetch_assoc($querycheck)) {?>
+                            <tr>  
+                                <td><?= $sn++ ?></td>
+                                    <td><?= $queryresult['id'] ?></td>
+                                    <td><?= htmlspecialchars($queryresult['subject']) ?></td>
+                                    <td><?= htmlspecialchars($queryresult['message']) ?></td>
+                                    <td><?php if($queryresult['status'] == 1) {?>
+                                        <span style="color: green;">Resolved</span>
+                                        <?php } else {?>
+                                            <span style="color:red;">Pending</span>
+                                            <?php }?>
+                                        </td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
     </section>

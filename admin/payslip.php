@@ -9,9 +9,10 @@ include "../config/db.php";
 $emp_id = intval($_GET['emp']);
 $month = $_GET['month'];
 
-$payslip = "SELECT p.*,s.* ,e.id,e.name,e.position,e.date_of_joining AS joining FROM payroll p 
+$payslip = "SELECT p.*,s.*,ps.payslip_id ,e.id,e.name,e.position,e.date_of_joining AS joining FROM payroll p 
 JOIN employees e ON p.employee_id=e.id 
 JOIN salaries s ON p.salary_id = s.id
+LEFT JOIN payslips ps ON ps.payroll_id = p.payroll_id
 where p.employee_id='$emp_id' AND p.month='$month'
 LIMIT 1";
 $payslipcheck=mysqli_query($conn,$payslip);
@@ -50,6 +51,7 @@ include '../includes/header.php';
         <div class="employee-summary">
             <div class="employee-data">
                 <div class="employee-head">
+                    <p>Payslip ID</p>
                     <P>Employee ID</P>
                     <p>Employee Name</p>
                     <p>Job Position</p>
@@ -59,6 +61,7 @@ include '../includes/header.php';
 
                 </div>
                 <div class="employee-result">
+                    <p>: <?= $result['payslip_id'] ?></p>
                      <p>: <?= $result['id'] ?></p>
                     <p>: <?= $result['name'] ?></p>
                     <p>: <?= $result['position'] ?></p>

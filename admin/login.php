@@ -36,7 +36,7 @@ if(isset($_POST['login'])){
             exit();
 
         } else {
-            $error = "Invalid Password";
+            $error = "Invalid Password!";
         }
 
     } else {
@@ -59,6 +59,9 @@ if(isset($_POST['login'])){
         
     <form method="POST">
         <h2>Sign In</h2>
+        <?php if(!empty($error)) {?>
+            <p style="color: red;margin-bottom:5px;"><?= $error ?></p>
+            <?php }?>
     <label for="email">Email</label><br>
     <input type="email" name="email" placeholder="Email"><br><br>
     <label for="password">Password</label><br>
@@ -68,4 +71,3 @@ if(isset($_POST['login'])){
 </section>
 </body>
 </html>
-<?php if(isset($error)) echo $error; ?>

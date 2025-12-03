@@ -2,20 +2,24 @@
 include "../config/auth.php"; 
 requireRole([1,2]);
 include "../config/db.php";
-$limit = 10;
+$limit = 5;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($page < 1) $page = 1;
 $offset = ($page - 1) * $limit;
 $sn=($page-1) *$limit+1;
-
-$counttotal = "SELECT COUNT(*) AS total from salaries ORDER BY id DESC";
+$where = 1;
+if (!empty($_GET['name'])) {
+    $name = mysqli_real_escape_string($conn, $_GET['name']);
+    $where = "name LIKE '%$name%'";
+}
+$counttotal = "SELECT COUNT(*) AS total from salaries s JOIN employees e ON s.employee_id=e.id  WHERE $where ";
 $countcheck = mysqli_query($conn, $counttotal);
 $countresult = mysqli_fetch_assoc($countcheck)['total'];
 $totalpages = ceil($countresult / $limit);
 
-$sql = "SELECT s.id, e.name, s.basic_salary, s.hra_allowances AS hra, s.deduction AS deductions
+$sql = "SELECT s.id,e.id, e.name, s.basic_salary, s.hra_allowances AS hra, s.deduction AS deductions
         FROM salaries s
-        JOIN employees e ON s.employee_id = e.id LIMIT $limit OFFSET $offset";
+        JOIN employees e ON s.employee_id = e.id WHERE $where ORDER BY s.id  LIMIT $limit OFFSET $offset";
 $result = mysqli_query($conn, $sql);
 
 include('../includes/header.php');
@@ -31,12 +35,17 @@ include('../includes/header.php');
             <a class="salary" href="addsalary.php">+ Add Salary Structure</a>
         </div>
       
-
+<form method="GET" class="filter">
+               <input type="text" name="name" placeholder="Search by name"
+                  value="<?= isset($_GET['name']) ? htmlspecialchars($_GET['name']) : '' ?>">
+    <button type="submit">Filter</button>
+</form>
 <?php if(isset($msg)) { echo '<p style="color:green;">'.$msg.'</p>'; } ?>
 
 <table border="1" cellpadding="10">
     <tr>
         <th>S.no</th>
+        <th>Employee Id</th>
         <th>Employee Name</th>
         <th>Basic Salary</th>
         <th>HRA</th>
@@ -48,6 +57,7 @@ include('../includes/header.php');
     <tr>
         <form method="post" action="">
             <td><?= $sn++ ?></td>
+            <td><?= $row['id'] ?></td>
             <td><?php echo htmlspecialchars($row['name']); ?></td>
             <td><?php echo $row['basic_salary'];?></td>
             <td><?php echo $row['hra']; ?></td>

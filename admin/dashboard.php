@@ -3,7 +3,6 @@ include '../config/auth.php';
 requireRole([1]);
 include '../config/db.php';
 include('../includes/header.php');
-
 $today = date("Y-m-d");
 $count=0;
 $role = [
@@ -54,6 +53,9 @@ if ($httpcode == 200 && $response) {
         $holidays = $data['response']['holidays'];
     }
 } 
+$marked="SELECT COUNT(*) as total FROM attendance WHERE created_at = '$today'";
+$markedcheck=mysqli_query($conn,$marked);
+$markedresult=mysqli_fetch_assoc($markedcheck);
 ?>
 
 <head>
@@ -140,12 +142,19 @@ if ($httpcode == 200 && $response) {
                 <div class="pending">
                     <div>
                         <h4>Mark Employee Attendance</h4>
-                        <p>Pending</p>
+                        <p><?php if($markedresult['total'] < 0) { ?>
+                            <span style="color: red;">Pending</span>
+
+                        <?php } else{ ?>
+                             <span style="color:green;">Already Marked</span>
+                             <?php }?>
+                        </p>
                         <a href="../admin/attendance.php">Mark Attendance</a>
                     </div>
                      <div>
                         <h4>Salary Revision</h4>
                         <p>Pending</p>
+                        
                         <a href="../admin/addsalary.php">Update</a>
                     </div>
                     <div>

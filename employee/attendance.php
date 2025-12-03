@@ -68,6 +68,7 @@ $history = mysqli_query($conn, $attendancehistory);
 
 <head>
     <link rel="stylesheet" href="../assets/css/empattendance.css">
+    <link rel="stylesheet" href="../assets/css/pagination.css">
 
     <title>Employee Attendance page</title>
 </head>

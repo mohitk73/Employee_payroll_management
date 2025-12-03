@@ -7,8 +7,13 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($page < 1) $page = 1;
 $offset = ($page - 1) * $limit;
 $sn=($page-1) *$limit+1;
+$where=1;
+if(isset($_GET['status']) && $_GET['status']!=''){
+    $status=(int)$_GET['status'];
+    $where .=" AND status='$status'" ;
+}
 
-$counttotal = "SELECT COUNT(*) AS total from queries";
+$counttotal = "SELECT COUNT(*) AS total from queries WHERE $where";
 $countcheck = mysqli_query($conn, $counttotal);
 $countresult = mysqli_fetch_assoc($countcheck)['total'];
 $totalpages = ceil($countresult / $limit);
@@ -18,7 +23,7 @@ if (isset($_POST['resolve'])) {
     mysqli_query($conn, "UPDATE queries SET status=1 WHERE id='$id'");
 }
 
-$query = "SELECT * FROM queries ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
+$query = "SELECT * FROM queries WHERE $where ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
 $querycheck = mysqli_query($conn, $query);
 include '../includes/header.php';
 
@@ -31,7 +36,15 @@ include '../includes/header.php';
 <main>
     <section>
         <h3>Employee Queries</h3>
-        <div>
+        <div class="filter">
+            <form method="GET">
+                <select name="status">
+                    <option value="">All</option>
+                    <option value="1" <?= (isset($_GET['status']) && $_GET['status']==='1' ? "selected":'') ?>>Resolved</option>
+                        <option value="0" <?= (isset($_GET['status']) && $_GET['status']==='0' ? "selected":'') ?>>Pending</option>
+                </select>
+                <button class="filter" type="submit">Filter</button>
+            </form>
         </div>
         <div class="employeequeries">
             <div class="querydata">
@@ -84,21 +97,7 @@ include '../includes/header.php';
                 </table>
 
             </div>
-            <div class="pagination">
-            <nav>
-                <ul>
-                    <?php if ($page > 1):  ?>
-                        <li><a href="?page=<?= $page - 1 ?>">Previous</a></li>
-                    <?php endif; ?>
-                    <?php for ($i = 1; $i <= $totalpages; $i++): ?>
-                        <li class="<?= ($i == $page) ? 'active' : '' ?>"><a href="?page=<?= $i ?>" class="<?= ($i == $page) ? 'active' : '' ?>"><?= $i ?></a></li>
-                    <?php endfor; ?>
-                    <?php if ($page < $totalpages): ?>
-                        <li><a href="?page=<?= $page + 1 ?>">Next</a></li>
-                    <?php endif; ?>
-                </ul>
-            </nav>
-        </div>
+            <?php include '../includes/pagination.php' ?>
         </div>
     </section>
 </main>

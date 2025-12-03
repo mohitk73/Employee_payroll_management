@@ -110,6 +110,27 @@ table td a:last-child {
     color: white;
     text-decoration: none;
 }
+.filter{
+    margin-top: 10px;
+}
+.filter{
+    display: flex;
+    gap: 20px;
+}
+.filter input, select{
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    cursor: pointer;
+}
+ .filter button{
+    padding: 8px 16px;
+    background-color: #2c3e50;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
 
 
 

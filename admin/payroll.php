@@ -2,16 +2,23 @@
 include "../config/auth.php"; 
 requireRole([1,2]);
 include "../config/db.php";
-include '../includes/header.php';
+
+if (isset($_GET['pay']) && $_GET['pay'] == 1 && isset($_GET['payroll_id'])) {
+    $payroll_id = (int)$_GET['payroll_id'];
+    mysqli_query($conn, "UPDATE payroll SET status=1 WHERE payroll_id=$payroll_id");
+    header("Location: payroll.php?month=".$_GET['month']);
+    exit;
+}
 $filter_month = $_POST['month'] ?? date('Y-m'); 
+
 $month=$_GET['filter_month'] ?? '';
-$limit = 3;
+$limit = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($page < 1) $page = 1;
 $offset = ($page - 1) * $limit;
 $sn=($page-1) *$limit+1;
 $where = "1"; 
-if (!empty($month)) {
+if (!empty($month)){
     $where .= " AND DATE_FORMAT(month, '%Y-%m') = '$month'";
 }
 $counttotal = "SELECT COUNT(*) AS total from payroll WHERE $where";
@@ -29,7 +36,7 @@ $today = date('Y-m');
 $last_completed_month = date("Y-m", strtotime("first day of last month"));
 $block_generate = true;
 if ($filter_month > $today) {
-    $msg = "Payroll cannot be generated for a n upcoming month!";
+    $msg = "Payroll cannot be generated for an upcoming month!";
 }
 elseif ($filter_month == $today) {
     $msg = "Payroll cannot be generated for an ongoing month!";
@@ -42,7 +49,7 @@ elseif ($filter_month < $last_completed_month) {
          LIMIT 1"
     );
     if (mysqli_num_rows($att_check) == 0) {
-        $msg = "No payroll exists for this month because NO attendance data was found.";
+        $msg = "No payroll exists for this month because no attendance data was found.";
     } else {
         $block_generate = false;
         $msg = "Payroll can be generated because attendance exists for $filter_month.";
@@ -95,7 +102,27 @@ if (isset($_POST['generate']) && !$block_generate) {
                 ($employee_id, {$row['salary_id']}, '$month_date', {$row['basic_salary']}, {$row['hra']}, 
                 $present_days, $absent_days, $gross_salary, $total_deductions, $net_salary, 0)";
             mysqli_query($conn, $insert_sql);
+             $payroll_id = mysqli_insert_id($conn);
         }
+
+else {
+    $existing = mysqli_fetch_assoc($check_res);
+    $payroll_id = $existing['payroll_id']; 
+}
+$payslip_id = rand(1000,9999); 
+while(mysqli_num_rows(mysqli_query($conn, "SELECT id FROM payslips WHERE payslip_id = $payslip_id")) > 0) {
+    $payslip_id = rand(1000,9999);
+}
+$check_payslip = mysqli_query($conn,
+    "SELECT id FROM payslips 
+     WHERE payroll_id = $payroll_id AND employee_id=$employee_id"
+);
+
+if (mysqli_num_rows($check_payslip) == 0) {
+    $insert_payslip = "INSERT INTO payslips (payslip_id,payroll_id, employee_id, month)
+                       VALUES ($payslip_id,$payroll_id, $employee_id, '$month_date')";
+    mysqli_query($conn, $insert_payslip);
+}
     }
 
     $msg = "Payroll generated for $filter_month!";
@@ -107,6 +134,7 @@ $payroll_sql = "SELECT p.*, e.name, e.department
                 ORDER BY p.month DESC LIMIT $limit OFFSET $offset";
 
 $payroll_result = mysqli_query($conn, $payroll_sql);
+include '../includes/header.php';
 ?>
 
 <head>
@@ -135,7 +163,6 @@ $payroll_result = mysqli_query($conn, $payroll_sql);
             <th>Total Working Days</th>
             <th>Total Present Days</th>
             <th>Total Absent Days</th>
-            <th>Per Day Salary</th>
             <th>Gross Salary</th>
             <th>Deductions</th>
             <th>Net Salary</th>
@@ -155,13 +182,21 @@ $payroll_result = mysqli_query($conn, $payroll_sql);
             <td><?php echo $row['present_days'] + $row['absent_days']; ?></td>
             <td><?php echo $row['present_days']; ?></td>
             <td><?php echo $row['absent_days']; ?></td>
-            <td><?php echo number_format($per_day,2); ?></td>
+         
             <td><?php echo number_format($row['gross_salary'],2); ?></td>
             <td><?php echo number_format($row['deductions'],2); ?></td>
             <td><?php echo number_format($row['net_salary'],2); ?></td>
             <td><?php echo $row['status'] == 1 ? 'Paid' : 'Unpaid'; ?></td>
             <td>
-                <a href="../admin/payslip.php?emp=<?= $row['employee_id'] ?>&month=<?= $row['month'] ?>">View Payslip</a>
+                <div style="display: flex;gap:10px;justify-content:center;align-items:center;">
+                <a class="payslip" href="../admin/payslip.php?emp=<?= $row['employee_id'] ?>&month=<?= $row['month'] ?>">Payslip</a>
+                <?php if ($row['status'] == 0): ?>
+        <a class="paid" href="?month=<?= $row['month'] ?>&payroll_id=<?= $row['payroll_id'] ?>&pay=1">Mark Paid</a>
+        
+    <?php else: ?>
+        <button class="alreadypaid" disabled>Paid</button>
+    <?php endif; ?>
+    </div>
             </td>
         </tr>
         <?php } ?>
@@ -183,5 +218,5 @@ $payroll_result = mysqli_query($conn, $payroll_sql);
         </div>
     </section><br>
     <br>
-    <a class="back"  href="../admin/employees.php"><- Back To Dashboard</a>
+    <a class="back"  href="../admin/dashboard.php"><- Back To Dashboard</a>
 </main>
