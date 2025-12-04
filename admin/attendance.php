@@ -1,8 +1,8 @@
 <?php
 include "../config/db.php";
-include "../config/auth.php"; 
-requireRole([1,2,3]);  
-$date = date("Y-m-d"); 
+include "../config/auth.php";
+requireRole([1, 2, 3]);
+$date = date("Y-m-d");
 $limit = 4;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($page < 1) $page = 1;
@@ -14,9 +14,7 @@ if (!empty($_GET['date'])) {
 } else {
     $date = date("Y-m-d");
 }
-
-$where[] = "a.date = '$date'";
-
+$where = [];
 if (!empty($_GET['name'])) {
     $name = mysqli_real_escape_string($conn, $_GET['name']);
     $where[] = "e.name LIKE '%$name%'";
@@ -29,11 +27,14 @@ if (isset($_GET['status'])) {
         $where[] = "a.status IS NULL";
     }
 }
-$wherestm = "WHERE " . implode(" AND ", $where);
+$wherestm = "";
+if (!empty($where)) {
+    $wherestm = "WHERE " . implode(" AND ", $where);
+}
 $counttotal = "SELECT COUNT(*) AS total FROM employees e
-       LEFT JOIN attendance a
-      ON e.id = a.employee_id
-    $wherestm
+    LEFT JOIN attendance a 
+    ON e.id = a.employee_id 
+    AND a.date = '$date'
 ";
 $countcheck = mysqli_query($conn, $counttotal);
 $countresult = mysqli_fetch_assoc($countcheck)['total'];
@@ -43,13 +44,15 @@ if (isset($_GET['emp_id']) && isset($_GET['status'])) {
     $emp_id = $_GET['emp_id'];
     $status = $_GET['status'];
     $date = date("Y-m-d");
-    $check = mysqli_query($conn,
+    $check = mysqli_query(
+        $conn,
         "SELECT id FROM attendance WHERE employee_id='$emp_id' AND date='$date'"
     );
     if (mysqli_num_rows($check) > 0) {
         $_SESSION['msg'] = "Attendance already marked!";
     } else {
-        mysqli_query($conn,
+        mysqli_query(
+            $conn,
             "INSERT INTO attendance (employee_id, date, status)
             VALUES ('$emp_id', '$date', '$status')"
         );
@@ -62,111 +65,108 @@ if (isset($_GET['emp_id']) && isset($_GET['status'])) {
 $employees = mysqli_query($conn, "SELECT * FROM employees ORDER BY name");
 
 $today = mysqli_query($conn, "
-    SELECT e.id, e.name, e.position, a.status ,a.created_at
+    SELECT e.id, e.name, e.position, a.status, a.created_at
     FROM employees e
-    LEFT JOIN attendance a 
-        ON e.id = a.employee_id 
-        $wherestm
+    INNER JOIN attendance a 
+        ON e.id = a.employee_id
+        AND a.date = '$date'
+    $wherestm
     ORDER BY e.name
-     LIMIT $limit OFFSET $offset
+    LIMIT $limit OFFSET $offset
 ");
+
 
 include('../includes/header.php');
 
 
 ?>
+
 <head>
     <link rel="stylesheet" href="../assets/css/attendance.css">
     <link rel="stylesheet" href="../assets/css/pagination.css">
 </head>
 <main>
-<section>
-<h3>Attendance – <?= $date ?></h3>
+    <section>
+        <h3>Attendance – <?= $date ?></h3>
 
-<form method="GET" class="attendance-filter">
-    <input type="date" name="date" 
-           value="<?= isset($_GET['date']) ? $_GET['date'] : date('Y-m-d') ?>">
-    <input type="text" name="name" placeholder="Search by name"
-           value="<?= isset($_GET['name']) ? htmlspecialchars($_GET['name']) : '' ?>">
-    <select name="status">
-        <option value="">All Status</option>
-        <option value="1" <?= (isset($_GET['status']) && $_GET['status'] === "1") ? "selected" : "" ?>>Present</option>
-        <option value="0" <?= (isset($_GET['status']) && $_GET['status'] === "0") ? "selected" : "" ?>>Absent</option>
-        <option value="null" <?= (isset($_GET['status']) && $_GET['status'] === "null") ? "selected" : "" ?>>Not Marked</option>
-    </select>
+        <form method="GET" class="attendance-filter">
+            <input type="date" name="date"
+                value="<?= isset($_GET['date']) ? $_GET['date'] : date('Y-m-d') ?>">
+            <input type="text" name="name" placeholder="Search by name"
+                value="<?= isset($_GET['name']) ? htmlspecialchars($_GET['name']) : '' ?>">
+            <select name="status">
+                <option value="">All Status</option>
+                <option value="1" <?= (isset($_GET['status']) && $_GET['status'] === "1") ? "selected" : "" ?>>Present</option>
+                <option value="0" <?= (isset($_GET['status']) && $_GET['status'] === "0") ? "selected" : "" ?>>Absent</option>
+                <option value="null" <?= (isset($_GET['status']) && $_GET['status'] === "null") ? "selected" : "" ?>>Not Marked</option>
+            </select>
 
-    <button type="submit">Filter</button>
-</form>
+            <button type="submit">Filter</button>
+        </form>
 
-<table class="attendance-table">
-    <tr>
-        <th>Employee Id</th>
-        <th>Name</th>
-        <th>Position</th>
-        <th>Status</th>
-          <?php if($_SESSION['role'] ==1 || $_SESSION['role'] == 2) {?><th>Action</th><?php }?>
-          <th>Marked At</th>
-    </tr>
+        <table class="attendance-table">
+            <tr>
+                <th>Employee Id</th>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Status</th>
+                <?php if ($_SESSION['role'] == 1 || $_SESSION['role'] == 2) { ?><th>Action</th><?php } ?>
+                <th>Marked At</th>
+            </tr>
+            <?php if (mysqli_num_rows($today) > 0) { ?>
+                <?php while ($row = mysqli_fetch_assoc($today)) { ?>
+                    <tr>
+                        <td><?= $row['id'] ?></td>
+                        <td><?= htmlspecialchars($row['name']) ?></td>
+                        <td><?= htmlspecialchars($row['position']) ?></td>
 
-    <?php while ($row = mysqli_fetch_assoc($today)) { 
-        
-        if (isset($_GET['filter'])) {
-            if ($_GET['filter'] == "present" && $row['status'] != 1){
-                 continue;
-            }
-            if ($_GET['filter'] == "absent" && $row['status'] != 0) 
-                {continue;
-                }
-        }
-    ?>
-    <tr>
-        <td><?= $row['id'] ?></td>
-        <td><?= htmlspecialchars($row['name']) ?></td>
-        <td><?= htmlspecialchars($row['position']) ?></td>
+                        <td>
+                            <?php if ($row['status'] === NULL) { ?>
+                                <span class="badge gray">Not Marked</span>
+                            <?php } elseif ($row['status'] == 1) { ?>
+                                <span class="badge green">Present</span>
+                            <?php } else { ?>
+                                <span class="badge red">Absent</span>
+                            <?php } ?>
+                        </td>
+                        <?php if ($_SESSION['role'] == 1 || $_SESSION['role'] == 2) { ?>
+                            <td>
 
-        <td>
-            <?php if ($row['status'] === NULL) { ?>
-                <span class="badge gray">Not Marked</span>
-            <?php } elseif ($row['status'] == 1) { ?>
-                <span class="badge green">Present</span>
+                                <?php if ($row['status'] === NULL) { ?>
+                                    <a href="attendance.php?emp_id=<?= $row['id'] ?>&status=1"
+                                        class="btn green">
+                                        Present
+                                    </a>
+
+                                    <a href="attendance.php?emp_id=<?= $row['id'] ?>&status=0"
+                                        class="btn red">
+                                        Absent
+                                    </a>
+
+                                <?php } else { ?>
+                                    <span class="badge gray">Already Marked</span>
+                                <?php } ?>
+
+                            </td>
+                            <td><?= $row['created_at']  ?></td>
+                        <?php } ?>
+                    </tr>
+                <?php } ?>
             <?php } else { ?>
-                <span class="badge red">Absent</span>
+                <tr>
+                    <td colspan="12" style="text-align:center;">No Record Found!</td>
+                </tr>
             <?php } ?>
-        </td>
- <?php if($_SESSION['role'] ==1 || $_SESSION['role'] == 2){?>
-     <td>
-       
-    <?php if ($row['status'] === NULL) { ?>
-        <a href="attendance.php?emp_id=<?= $row['id'] ?>&status=1"
-           class="btn green">
-           Present
-        </a>
 
-        <a href="attendance.php?emp_id=<?= $row['id'] ?>&status=0"
-           class="btn red">
-           Absent
-        </a>
 
-    <?php } else { ?>
-        <span class="badge gray">Already Marked</span>
-    <?php } ?>
-   
-</td>
-<td><?= $row['created_at']  ?></td>
- <?php } ?>
-    </tr>
-   
-    <?php } ?>
-
-</table>
-<?php include '../includes/pagination.php' ?>
-</section>
+        </table>
+        <?php include '../includes/pagination.php' ?>
+    </section>
 </main>
 <script>
-function disableButton(btn) {
-    btn.textContent = "Marked...";
-    btn.style.opacity = "0.5";
-    btn.style.pointerEvents = "none"; 
-}
+    function disableButton(btn) {
+        btn.textContent = "Marked...";
+        btn.style.opacity = "0.5";
+        btn.style.pointerEvents = "none";
+    }
 </script>
-

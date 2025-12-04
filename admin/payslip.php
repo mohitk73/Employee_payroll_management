@@ -166,6 +166,6 @@ include '../includes/header.php';
     </section>
     <div class="downloadslip">
     <a href ="../admin/payroll.php" class="back">Back to Payroll</a>
-    <a class="download" href="download.php">Download Pay Slip</a>
+    <a class="download" href="../download.php?emp=<?= $emp_id ?>&month=<?= $month ?>">Download Pay Slip</a>
     </div>
 </main>

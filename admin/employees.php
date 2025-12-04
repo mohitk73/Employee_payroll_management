@@ -112,8 +112,9 @@ include '../includes/header.php';
                             <th>Actions</th>
                         <?php } ?>
                     </tr>
-
-                    <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+<?php if(mysqli_num_rows($result) > 0){?>
+                    <?php while($row = mysqli_fetch_assoc($result)) { ?>
+                        
                         <tr>
                             <td><?= $sn++ ?></td>
                             <td><?= $row['id'] ?></td>
@@ -143,7 +144,17 @@ include '../includes/header.php';
                                 </td>
                             <?php } ?>
                         </tr>
+                        
                     <?php } ?>
+                    <?php } else{?>
+                          <tr>
+                           <td colspan="12" style="text-align:center;">No Record Found!</td>
+                         </tr>
+                        <?php }?>
+                    
+
+                   
+
                 </table>
                 <div class="pagination">
                     <nav>

@@ -184,7 +184,7 @@ $markedresult=mysqli_fetch_assoc($markedcheck);
                     </div><hr>
                     <div>
                         <h4>On Leave</h4>
-                        <p>1</p>
+                        <p>0</p>
                     </div><hr>
                     <div>
                         <a href="../admin/attendance.php">View Details</a>

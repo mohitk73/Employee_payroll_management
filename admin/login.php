@@ -63,7 +63,7 @@ if(isset($_POST['login'])){
             <p style="color: red;margin-bottom:5px;"><?= $error ?></p>
             <?php }?>
     <label for="email">Email</label><br>
-    <input type="email" name="email" placeholder="Email"><br><br>
+    <input type="email" name="email"   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" placeholder="Email"><br><br>
     <label for="password">Password</label><br>
     <input type="password" name="password" placeholder="Password"><br><br>
     <button type="submit"  name="login">Login</button><br>

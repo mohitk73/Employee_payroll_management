@@ -26,12 +26,12 @@ $activepage = basename($_SERVER['PHP_SELF']);
         <?php } ?>
 
         <?php if ($_SESSION['role'] == 2) { ?>
-            <a href="../hr/hrdashboard.php">Dashboard</a>
-            <a href="../admin/employees.php">Employees</a>
-            <a href="../admin/attendance.php">Leave and Attendance</a>
-            <a href="../admin/salary_structure.php">Salary Structure</a>
-            <a href="../admin/payroll.php">Payroll</a>
-            <a href="../admin/payslip.php">Payslips</a>
+            <a href="../hr/hrdashboard.php" class="<?= $activepage == 'hrdashboard.php' ? 'active' : '' ?>">Dashboard</a>
+            <a href="../admin/employees.php" class="<?= $activepage == 'employees.php' ? 'active' : '' ?>">Employees</a>
+            <a href="../admin/attendance.php" class="<?= $activepage == 'attendance.php' ? 'active' : '' ?>">Leave and Attendance</a>
+            <a href="../admin/salary_structure.php" class="<?= $activepage == 'salary_structure.php' ? 'active' : '' ?>">Salary Structure</a>
+            <a href="../admin/payroll.php" class="<?= $activepage == 'payroll.php' ? 'active' : '' ?>">Payroll</a>
+            <a href="../admin/payslips.php" >Payslips</a>
             <a href="../logout.php" class="logout">Logout</a>
         <?php } ?>
 
@@ -70,7 +70,8 @@ $activepage = basename($_SERVER['PHP_SELF']);
                     <nav>
                         <ul>
                             <li><a href="../admin/profile.php">View Profile</a></li>
-                            <li><a href="../contactsupport.php">Get Help</a></li>
+                            <?php if($_SESSION['role']==1){ ?><li><a href="../admin/empqueries.php">View Queries</a></li><?php } else{?>
+                                <li><a href="../contactsupport.php">Get Help</a></li><?php }?>
                             <li><a href="../logout.php">Logout</a></li>
                         </ul>
                     </nav>
