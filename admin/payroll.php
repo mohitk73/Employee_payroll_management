@@ -169,6 +169,7 @@ include '../includes/header.php';
             <th>Status</th>
             <th>Action</th>
         </tr>
+        <?php if(mysqli_num_rows($payroll_result)>0){?>
         <?php while($row = mysqli_fetch_assoc($payroll_result)){ 
             $per_day = $row['basic_salary'] / $total_working_days;
         ?>
@@ -200,6 +201,11 @@ include '../includes/header.php';
             </td>
         </tr>
         <?php } ?>
+        <?php } else {?>
+            <tr>
+                <td colspan="12" style="text-align: center;">No Records Found!</td>
+            </tr>
+            <?php } ?>
         </table>
         <div class="pagination">
             <nav>

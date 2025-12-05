@@ -4,7 +4,6 @@ include "../config/auth.php";
 requireRole([1,2,3]);  
 
 if (isset($_POST['add'])) {
-
     $name = htmlspecialchars($_POST['name']);
     $email = $_POST['email'];
     $password = password_hash($_POST['password'],PASSWORD_DEFAULT);
@@ -12,122 +11,70 @@ if (isset($_POST['add'])) {
     $phone = $_POST['phone'];
     $position = htmlspecialchars($_POST['position']);
     $department = htmlspecialchars($_POST['department']);
+    $manager_id = htmlspecialchars($_POST['manager_id']);
     $date_of_joining = $_POST['date_of_joining'];
     $address = htmlspecialchars($_POST['address']);
     $status = $_POST['status'];
-
-    $sql = "INSERT INTO employees 
-        (name, email, password, role, phone, position, department, date_of_joining, address, status)
-        VALUES ('$name', '$email', '$password', '$role', '$phone', '$position', '$department', '$date_of_joining', '$address', '$status')";
+    if (empty($name) || !preg_match("/^[A-Za-z\s]{2,50}$/", $name)) {
+        $error = "Name should be between 2-50 characters and contain only letters and spaces.";
+    }
+     if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Please enter a valid email address.";
+    }
+   
+    if (empty($phone) || !preg_match("/^[0-9]{10}$/", $phone)) {
+        $error = "Phone number must be exactly 10 digits.";
+    }
+    if (empty($position)) {
+        $error = "Position is required.";
+    }
+    if (empty($department)) {
+        $error = "Department is required.";
+    }
+    if (empty($date_of_joining)) {
+        $error = "Date of joining is required.";
+    }
+    if (empty($address) || !preg_match("/^[A-Za-z0-9\s,.-]{5,200}$/", $address)) {
+        $error = "Address is required and should be between 5-200 characters.";
+    }
+    if (empty($manager_id)) {
+        $manager_id = NULL;  
+    }
     
-    if (mysqli_query($conn, $sql)) {
-        header("Location:employees.php");
-        exit();
-    } else {
-        echo "Error: " . mysqli_error($conn);
+    if (!isset($error)) {
+        $sql = "INSERT INTO employees 
+            (name, email, password, role, phone, position, department, manager_id, date_of_joining, address, status)
+            VALUES ('$name', '$email', '$password', '$role', '$phone', '$position', '$department', " . ($manager_id !== NULL ? $manager_id : "NULL") . ", '$date_of_joining', '$address', '$status')";
+        
+        if (mysqli_query($conn, $sql)) {
+            header("Location: employees.php");
+            exit();
+        } else {
+            $error = "Error: " . mysqli_error($conn);
+        }
     }
 }
 include('../includes/header.php');
 ?>
 <head>
-    <style>
-main {
-    padding: 40px;
-    background: #f5f6fa;
-    display: grid;
-    margin: 0 auto;
-    max-width: 800px;
-    
-}
-h3 {
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 10px;
-   color: #2c3e50;
-}
-hr{
-    border: 1px solid #ddd;
-    margin-bottom: 20px;
-}
-form {
-    max-width: 700px;
-    background: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-}
-form label {
-    font-size: 15px;
-    color: #333;
-    font-weight: 500;
-    display: block;
-}
-form input,
-form select,
-form textarea {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid #d0d0d0;
-    border-radius: 6px;
-    font-size: 15px;
-    outline: none;
-    transition: 0.2s;
-}
-
-form textarea{
-    height: 40px;
-}
-
-form button {
-    background: #4a90e2;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
-    margin-top: 10px;
-    width: 200px;
-    float: right;
-}
-
-form button:hover {
-    background: #357ABD;
-}
-.back  {
-    background-color: #444;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 10px;
-    float: right;
-    font-size: 15px;
-    text-decoration: none;
-    margin-right: 5px;
-}
-
-.back :hover {
-    color: #000;
-    
-}
-    </style>
+    <link rel="stylesheet" href="../assets/css/addemployee.css">
 </head>
 <main>
 <form method="POST">
     <h3>Add New Employee</h3>
     <hr>
+    <?php if(!empty($error)) {?>
+            <p style="color: red;margin-bottom:5px;"><?= $error ?></p>
+            <?php }?>
 
     <label>Name</label><br>
     <input type="text" name="name" pattern="[A-Za-z\s]{2,50}" required><br><br>
 
     <label>Email</label><br>
-    <input type="email" name="email" required><br><br>
+    <input type="email" name="email" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required><br><br>
 
     <label>Password</label><br>
-    <input type="text" name="password" required><br><br>
+    <input type="password" name="password" required><br><br>
 
     <label>Role</label><br>
     <select name="role">
@@ -151,6 +98,17 @@ form button:hover {
         <option value="HR">HR</option>
         <option value="Sales">Sales</option>
 </select><br><br>
+<label>Assign Manager</label><br>
+<select name="manager_id">
+        <option value="">No Manager</option>
+        <?php
+        $managers = mysqli_query($conn, "SELECT id, name FROM employees WHERE role = 3"); 
+        while ($manager = mysqli_fetch_assoc($managers)) {
+            echo "<option value='" . $manager['id'] . "'>" . $manager['name'] . "</option>";
+        }
+        ?>
+    </select><br><br>
+
 
     <label>Date of Joining</label><br>
     <input type="date" name="date_of_joining" required><br><br>

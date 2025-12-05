@@ -36,13 +36,12 @@ $activepage = basename($_SERVER['PHP_SELF']);
         <?php } ?>
 
         <?php if ($_SESSION['role'] == 3) { ?>
-            <a href="../manager/managerdashboard.php">Dashboard</a>
-            <a href="../admin/employees.php">Employees List</a>
-            <a href="../admin/attendance.php">Attendance</a>
-            <a href="../manager/managerpayslip.php">Payslips</a>
-            <a href="../contactsupport.php">Contact Support</a>
-
-            <a href="../logout.php" class="logout">Logout</a>
+            <a href="../manager/managerdashboard.php" class="<?= $activepage == 'managerdashboard.php' ? 'active' : '' ?>">Dashboard</a>
+            <a href="../manager/manageremployees.php" class="<?= $activepage == 'manageremployees.php' ? 'active' : '' ?>">Employees List</a>
+            <a href="../manager/managerattendance.php" class="<?= $activepage == 'managerattendance.php' ? 'active' : '' ?>">Attendance</a>
+            <a href="../manager/managerpayslip.php" class="<?= $activepage == 'managerpayslip.php' ? 'active' : '' ?>">Payslips</a>
+            <a href="../contactsupport.php" class="<?= $activepage == 'contactsupport.php' ? 'active' : '' ?>">Contact Support</a>
+            <a href="../logout.php" class="logout" class="<?= $activepage == 'hrdashboard.php' ? 'active' : '' ?>">Logout</a>
         <?php } ?>
 
         <?php if ($_SESSION['role'] == 0) { ?>
@@ -59,11 +58,11 @@ $activepage = basename($_SERVER['PHP_SELF']);
         <header>
 
             <div>
-                <input type="text" placeholder="Search Employee">
+               
             </div>
             <div class="nav">
                 <h2>Welcome <?= $_SESSION['name'] . " " . "!" ?></h2>
-                <i class="fas fa-bell"></i>
+               
                 <i onclick="menu(event)" class="fas fa-bars"></i>
 
                 <div class="profile">
@@ -75,7 +74,6 @@ $activepage = basename($_SERVER['PHP_SELF']);
                             <li><a href="../logout.php">Logout</a></li>
                         </ul>
                     </nav>
-
                 </div>
             </div>
 

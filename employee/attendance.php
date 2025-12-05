@@ -109,21 +109,20 @@ $history = mysqli_query($conn, $attendancehistory);
                 <form method="GET" class="filter">
                     <div>
                         <label>From:</label>
-                        <input type="date" name="from" value="<?= $_GET['from'] ?? '' ?>">
+                        <input type="date" name="from" value="<?= $_GET['from'] ?? '' ?>" onchange="this.form.submit()">
                     </div>
                     <div>
                         <label>to:</label>
-                        <input type="date" name="to" value="<?= $_GET['to'] ?? '' ?>">
+                        <input type="date" name="to" value="<?= $_GET['to'] ?? '' ?>"onchange="this.form.submit()">
                     </div>
                     <div>
                         <label>Status:</label>
-                        <select name="status">
+                        <select name="status" onchange="this.form.submit()">
                             <option value="">All</option>
                             <option value="1" <?= (($_GET['status'] ?? '') == '1') ? 'selected' : '' ?>>Present</option>
                             <option value="0" <?= (($_GET['status'] ?? '') == '0') ? 'selected' : '' ?>>Absent</option>
                         </select>
                     </div>
-                    <button type="submit">Apply</button>
                 </form>
             </div>
             <table class="attendance-table">

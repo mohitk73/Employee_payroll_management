@@ -22,115 +22,57 @@ if (isset($_POST['update'])) {
     $role=$_POST['role'];
     $position = htmlspecialchars($_POST['position']);
     $department = htmlspecialchars($_POST['department']);
+    $manager_id =$_POST['manager_id'];
     $address = htmlspecialchars($_POST['address']);
     $status = $_POST['status'];
-
+    if (empty($name) || !preg_match("/^[A-Za-z\s]{2,50}$/", $name)) {
+        $error = "Name should be between 2-50 characters and contain only letters and spaces.";
+    }
+     if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Please enter a valid email address.";
+    }
+   
+    if (empty($phone) || !preg_match("/^[0-9]{10}$/", $phone)) {
+        $error = "Phone number must be exactly 10 digits.";
+    }
+    if (empty($position)) {
+        $error = "Position is required.";
+    }
+    if (empty($department)) {
+        $error = "Department is required.";
+    }
+    
+    if (empty($address) || !preg_match("/^[A-Za-z0-9\s,.-]{5,200}$/", $address)) {
+        $error = "Address is required and should be between 5-200 characters.";
+    }
+    if (empty($manager_id)) {
+        $manager_id = NULL;  
+    }
+   if (!isset($error)) {
     $sql = "UPDATE employees SET name='$name',email='$email',
                 phone='$phone',
                 role='$role',
                 position='$position',
                 department='$department',
+                manager_id=" . ($manager_id !== NULL ? $manager_id : "NULL") . ",
                 address='$address',
                 status='$status'
             WHERE id=$id";
 
-    mysqli_query($conn, $sql);
-    header("Location:employees.php");
-    exit();
+    if (mysqli_query($conn, $sql)) {
+        header("Location: employees.php");
+        exit();
+    } else {
+        echo "Error: " . mysqli_error($conn); 
+    }
+}
 }
 include('../includes/header.php');
 ?>
 
 <head>
     <title>Edit Employee</title>
-    <style>
-        section{
-    margin-left: 250px; 
-    padding: 30px;
-    font-family: Arial, sans-serif;
-    display: grid;
-    max-width: 800px;
-    margin: 20px auto;
-    
-}
-
-h3{
-    font-size: 22px;
-    margin-bottom: 5px;
-    color: #2c3e50;
-}
-hr{
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-}
-
-form {
-    background: #ffffff;
-    padding: 25px;
-    max-width: 800px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-form input,
-form textarea,
-form select {
-    width: 100%;
-    padding: 10px;
-    font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    margin-top: 5px;
-}
-
-form textarea {
-    height: 40px;
-    resize: none;
-}
-
-form button {
-    background: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    font-size: 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 10px;
-    float: right;
-}
-
-form button:hover {
-    background: #0056b3;
-}
-
-.back  {
-    background-color: #444;
-     
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 10px;
-    float: right;
-    font-size: 15px;
-    text-decoration: none;
-    margin-right: 5px;
-}
-
-.back :hover {
-    color: #000;
-    
-}
-
-form label {
-    font-weight: bold;
-    display: block;
-    margin-top: 12px;
-}
-
-    </style>
+    <link rel="stylesheet" href="../assets/css/editemployee.css">
 </head>
 <main>
 <section>
@@ -138,6 +80,9 @@ form label {
 
 <h3>Edit Employee</h3>
 <hr>
+ <?php if(!empty($error)) {?>
+            <p style="color: red;margin-bottom:5px;"><?= $error ?></p>
+            <?php }?>
 
     Name:<br>
     <input type="text" name="name" value="<?= $emp['name'] ?>" pattern="[A-Za-z\s]{2,50}" required><br><br>
@@ -166,7 +111,16 @@ form label {
             <option value="HR" <?= $emp['department'] == 'HR' ? 'selected' : '' ?>>HR</option>
             <option value="Sales" <?= $emp['department'] == 'Sales' ? 'selected' : '' ?>>Sales</option>
         </select><br><br>
-
+        Assign Manager:
+<select name="manager_id">
+        <option value="">No Manager</option>
+        <?php
+        $managers = mysqli_query($conn, "SELECT id, name FROM employees WHERE role = 3"); 
+        while ($manager = mysqli_fetch_assoc($managers)) {
+            echo "<option value='" . $manager['id'] . "'>" . $manager['name'] . "</option>";
+        }
+        ?>
+    </select><br><br>
     Address:<br>
     <textarea name="address" required><?= $emp['address'] ?></textarea><br><br>
 

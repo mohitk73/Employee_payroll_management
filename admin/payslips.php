@@ -58,7 +58,9 @@ include '../includes/header.php';
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if(isset($_GET['month'])) while($payslipsresult=mysqli_fetch_assoc($payslips)) { ?>
+                    <?php if(isset($_GET['month'])){?>
+                        <?php if(mysqli_num_rows($payslips)>0){?>
+                            <?php while($payslipsresult=mysqli_fetch_assoc($payslips)) { ?>
                     <tr>
                         <td><?= $sn++ ?></td>
                         <td><?= $payslipsresult['payslip_id'] ?></td>
@@ -70,6 +72,20 @@ include '../includes/header.php';
                         </td>
                     </tr>
                     <?php }?>
+                    <?php } else{?>
+                        <tr>
+                            <td colspan="12" style="text-align: center;">
+                                No Records Found!
+                            </td>
+                        </tr>
+                        <?php }?>
+                        <?php } else{?>
+                             <tr>
+                            <td colspan="12" style="text-align: center;">
+                                No Records Found!
+                            </td>
+                        </tr>
+                            <?php }?>
                 </tbody>
             </table>
            <?php include '../includes/pagination.php' ?>

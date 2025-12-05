@@ -10,7 +10,9 @@ if ($page < 1) $page = 1;
 $offset = ($page - 1) * $limit;
 $sn = ($page - 1) * $limit + 1;
 
+$mngid=$_SESSION['user_id'];
 $where = [];
+$where[]=" manager_id='$mngid'";
 if (!empty($_GET['date'])) {
     $date = mysqli_real_escape_string($conn, $_GET['date']);
 } else {
@@ -109,7 +111,6 @@ include('../includes/header.php');
                 <th>Name</th>
                 <th>Position</th>
                 <th>Status</th>
-                <?php if ($_SESSION['role'] == 1 || $_SESSION['role'] == 2) { ?><th>Action</th><?php } ?>
                 <th>Marked At</th>
             </tr>
             <?php if (mysqli_num_rows($today) > 0) { ?>
@@ -128,23 +129,6 @@ include('../includes/header.php');
                                 <span class="badge red">Absent</span>
                             <?php } ?>
                         </td>
-
-                        <?php if ($_SESSION['role'] == 1 || $_SESSION['role'] == 2) { ?>
-                            <td>
-                                <?php if ($row['status'] === NULL) { ?>
-                                    <a href="attendance.php?emp_id=<?= $row['id'] ?>&status=1"
-                                        class="btn green">
-                                        Present
-                                    </a>
-                                    <a href="attendance.php?emp_id=<?= $row['id'] ?>&status=0"
-                                        class="btn red">
-                                        Absent
-                                    </a>
-                                <?php } else { ?>
-                                    <span class="badge gray">Already Marked</span>
-                                <?php } ?>
-                            </td>
-                        <?php } ?>
                         <td><?= $row['created_at'] ?></td>
                     </tr>
                 <?php } ?>

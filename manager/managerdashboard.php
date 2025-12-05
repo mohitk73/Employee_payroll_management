@@ -33,16 +33,16 @@ $attendancepercentage = ($totalworkingdays > 0) ? round($dashboarddetails['prese
 $pay_date = date("Y-m-06", strtotime($dashboarddetails['month'] . " +1 month"));
 $nextpay_date = date("Y-m-06", strtotime($dashboarddetails['month'] . " +2 month"));
 
-$TotalEmployees = "SELECT COUNT(*) AS totalemp FROM employees";
+$TotalEmployees = "SELECT COUNT(*) AS totalemp FROM employees WHERE manager_id='$user_id";
 $totalempcheck = mysqli_query($conn, $TotalEmployees);
 $totalresult = mysqli_fetch_assoc($totalempcheck);
 $presenttoday = "SELECT COUNT(*) AS present FROM attendance 
                     WHERE date = CURDATE() AND status = 1";
 $presentcheck = mysqli_query($conn, $presenttoday);
-$presentcheck = mysqli_fetch_assoc($presentcheck);
+$presentresult = mysqli_fetch_assoc($presentcheck);
 $absenttoday = "SELECT COUNT(*) AS absent 
                    FROM attendance 
-                   WHERE date = CURDATE() AND status = 0";
+                   WHERE date = CURDATE() AND status = 0 AND ";
 $absentcheck = mysqli_query($conn, $absenttoday);
 $absentresult = mysqli_fetch_assoc($absentcheck);
 
@@ -72,7 +72,7 @@ include('../includes/header.php');
                     <hr>
                     <div>
                         <h4>Present Today</h4>
-                        <p><?= $presentcheck['present'] ?></p>
+                        <p><?= $presentresult['present'] ?></p>
                     </div>
                     <hr>
                     <div>
@@ -82,7 +82,7 @@ include('../includes/header.php');
                 
 
                     <div class="attreports">
-                        <a href="../admin/attendance.php">View Details</a>
+                        <a href="../manager/managerattendance.php">View Details</a>
                         <p></p>
                     </div>
                 </div>
@@ -131,7 +131,7 @@ include('../includes/header.php');
                 </div>
                 <div class="latest">
                     <h4>View Recent Payslip </h4>
-                    <a href="../employee/emppayslip.php?month=<? date("Y-m", strtotime($dashboarddetails['month'])) ?>">View Payslip</a>
+                    <a href="../manager/managerpayslip.php/?month=<?= date("Y-m", strtotime($dashboarddetails['month'])) ?>">View Payslip</a>
 
                 </div>
             </div>

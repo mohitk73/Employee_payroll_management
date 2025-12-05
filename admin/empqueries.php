@@ -8,6 +8,12 @@ if ($page < 1) $page = 1;
 $offset = ($page - 1) * $limit;
 $sn=($page-1) *$limit+1;
 $where=1;
+
+if (!empty($_GET['date'])) {
+    $date = mysqli_real_escape_string($conn, $_GET['date']);
+    $where .= " AND DATE(created_at) = '$date'";
+}
+
 if(isset($_GET['status']) && $_GET['status']!=''){
     $status=(int)$_GET['status'];
     $where .=" AND status='$status'" ;
@@ -38,12 +44,12 @@ include '../includes/header.php';
         <h3>Employee Queries</h3>
         <div class="filter">
             <form method="GET">
-                <select name="status">
+                     <input type="date" name="date" value="<?= $_GET['date'] ?? ''?>" onchange="this.form.submit()">
+                <select name="status" onchange="this.form.submit()">
                     <option value="">All</option>
                     <option value="1" <?= (isset($_GET['status']) && $_GET['status']==='1' ? "selected":'') ?>>Resolved</option>
                         <option value="0" <?= (isset($_GET['status']) && $_GET['status']==='0' ? "selected":'') ?>>Pending</option>
                 </select>
-                <button class="filter" type="submit">Filter</button>
             </form>
         </div>
         <div class="employeequeries">
@@ -62,6 +68,7 @@ include '../includes/header.php';
                             <th>Action</th>
                         </tr>
                     <tbody>
+                        <?php if(mysqli_num_rows($querycheck)>0) {?>
                         <?php while ($row = mysqli_fetch_assoc($querycheck)) { ?>
                             <tr>
                                 <td><?= $sn++ ?></td>
@@ -91,6 +98,13 @@ include '../includes/header.php';
                                 </td>
                             </tr>
                         <?php } ?>
+                        <?php } else{?>
+                        <tr>
+                            <td colspan="12" style="text-align: center;">
+                                No Records Found!
+                            </td>
+                        </tr>
+                        <?php }?>
 
                     </tbody>
                     </thead>

@@ -7,7 +7,7 @@ $employee_id=$_POST['employee_id'];
  $basic_salary = $_POST['basic_salary'];
     $hra = $_POST['hra'];
     $deductions = $_POST['deductions'];
-
+    
     $sql = "INSERT INTO salaries (employee_id, basic_salary, hra_allowances, deduction) 
             VALUES ('$employee_id', '$basic_salary', '$hra', '$deductions')";
     $result = mysqli_query($conn, $sql);
@@ -18,6 +18,7 @@ $employee_id=$_POST['employee_id'];
     } else {
         echo "<p style='color:red;'>Error: ".mysqli_error($conn)."</p>";
     }
+
 }
 include('../includes/header.php');
 ?>
@@ -43,15 +44,15 @@ include('../includes/header.php');
     </select>
     <br><br>
     <label>Basic Salary:</label>
-    <input type="number" name="basic_salary" required>
+    <input type="number" name="basic_salary" pattern="^[0-9]+(\.[0-9]{1,2})?$" required>
     <br><br>
 
     <label>HRA (House Rent Allowance):</label>
-    <input type="number" name="hra" required>
+    <input type="number" name="hra" pattern="^[0-9]+(\.[0-9]{1,2})?$" required>
     <br><br>
 
     <label>Fixed Deductions:</label>
-    <input type="number" name="deductions" required>
+    <input type="number" name="deductions" pattern="^[0-9]+(\.[0-9]{1,2})?$" required>
     <br><br>
     <div class="salary"><a href="employees.php" class="back"><- Back to Employees</a>
     <button type="submit" name="submit">Save Salary Structure</button>

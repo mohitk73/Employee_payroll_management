@@ -12,7 +12,6 @@ if (!$emp_id || !$month) {
     die("Missing Employee or month");
 }
 
-// Prepare the query exactly like your emppayslip page
 $query = "
 SELECT 
     p.*, 
@@ -30,7 +29,6 @@ WHERE p.employee_id = ? AND p.month = ?
 LIMIT 1
 ";
 
-// Prepare and bind
 $stmt = $conn->prepare($query);
 $stmt->bind_param("is", $emp_id, $month);
 $stmt->execute();
@@ -42,14 +40,13 @@ if ($result_set->num_rows === 0) {
 
 $result = $result_set->fetch_assoc();
 
-// Derived calculations
 $perday_salary = $result['basic_salary'] / $result['total_working_days'];
 $absentdeduction = $perday_salary * $result['absent_days'];
 $pay_date = date("Y-m-06", strtotime($result['month'] . " +1 month"));
 
-// Capture the payslip HTML
+
 ob_start();
-include __DIR__ . "/payslip_view.php"; // Make sure path is correct
+include __DIR__ . "/payslip_view.php";
 $html = ob_get_clean();
 
 // Generate PDF
